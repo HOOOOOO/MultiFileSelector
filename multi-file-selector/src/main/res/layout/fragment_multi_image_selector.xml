@@ -18,8 +18,13 @@
         android:orientation="horizontal"
         android:paddingTop="3dp">
         <Button
-            android:id="@+id/btn_albums"
+            android:id="@+id/btn_folders"
             android:text="所有图片"
+            style="@style/DefaultButtonStyle"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/btn_artists"
+            android:text="所有歌手"
             style="@style/DefaultButtonStyle"
             android:layout_weight="1"/>
         <Button

@@ -7,14 +7,19 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.hochan.multi_file_selector.MultiFileSelectorActivity;
 import com.hochan.multi_file_selector.MultiImageSelectorFragment;
+import com.hochan.multi_file_selector.data.MediaFile;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Toolbar mToolbar;
-    private Button btnSelectImage;
+    private Button btnSelectImage, btnSelectAudio, btnSelectVideo, btnSelectText;
+    private TextView tvResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +32,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnSelectImage = (Button) findViewById(R.id.btn_select_image);
         btnSelectImage.setOnClickListener(this);
+        btnSelectAudio = (Button) findViewById(R.id.btn_select_audio);
+        btnSelectAudio.setOnClickListener(this);
+        btnSelectVideo = (Button) findViewById(R.id.btn_select_video);
+        btnSelectVideo.setOnClickListener(this);
+        btnSelectText = (Button) findViewById(R.id.btn_select_text);
+        btnSelectText.setOnClickListener(this);
+
+        tvResult = (TextView) findViewById(R.id.tv_result);
     }
 
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
+        intent.setClass(this, MultiFileSelectorActivity.class);
         switch (v.getId()){
             case R.id.btn_select_image:
-                intent.setClass(this, MultiFileSelectorActivity.class);
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, MediaFile.TYPE_IMAGE);
+                startActivityForResult(intent, MediaFile.TYPE_IMAGE);
                 break;
+            case R.id.btn_select_audio:
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, MediaFile.TYPE_AUDIO);
+                startActivityForResult(intent, MediaFile.TYPE_AUDIO);
+                break;
+
         }
-        startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            ArrayList<String> resultList = data.getStringArrayListExtra(
+                    MultiImageSelectorFragment.EXTRA_RESULT);
+            for(String str : resultList){
+                System.out.println(str);
+                tvResult.append(str+"\n");
+            }
+        }
     }
 }

@@ -6,8 +6,8 @@ package com.hochan.multi_file_selector.data;
 public class MediaFile {
 
     public final static int TYPE_IMAGE = 0;
-    public final static int TYPE_VIDEO = 1;
-    public final static int TYPE_AUDIO = 2;
+    public final static int TYPE_AUDIO = 1;
+    public final static int TYPE_VIDEO = 2;
 
     private int mType;
     private String mName;

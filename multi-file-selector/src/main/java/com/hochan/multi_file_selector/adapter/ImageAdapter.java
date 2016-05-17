@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.hochan.multi_file_selector.MultiImageSelectorFragment;
 import com.hochan.multi_file_selector.R;
 import com.hochan.multi_file_selector.data.MediaFile;
+import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
 import com.hochan.multi_file_selector.tool.ScreenTools;
 import com.hochan.multi_file_selector.view.SquaredImageView;
 import com.squareup.picasso.Picasso;
@@ -36,6 +37,10 @@ public class ImageAdapter extends RecyclerView.Adapter{
     public void setData(List<MediaFile> images){
         mImages = (ArrayList<MediaFile>) images;
         notifyDataSetChanged();
+    }
+
+    public List<MediaFile> getSelectedImages(){
+        return mSelectedImages;
     }
 
     @Override
@@ -89,6 +94,15 @@ public class ImageAdapter extends RecyclerView.Adapter{
                 sivMask.setVisibility(View.VISIBLE);
             }
             System.out.println("已选图片数目："+mSelectedImages.size());
+            if(mAdapaterListener != null){
+                mAdapaterListener.fileSelected(mSelectedImages.size());
+            }
         }
+    }
+
+    private MediaFileAdapterListener mAdapaterListener;
+
+    public void setImageAdpaterListener(MediaFileAdapterListener listener){
+        this.mAdapaterListener = listener;
     }
 }
