@@ -8,9 +8,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import com.hochan.multi_file_selector.data.Folder;
 import com.hochan.multi_file_selector.data.MediaFile;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/5/7.
@@ -46,6 +49,7 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private Context mContext;
     private int mType;
+    private List<Folder> mFolders;
 
     public DataLoader(Context context, int type){
         this.mContext = context;
@@ -113,13 +117,14 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
             videoFiles.add(videoFile);
         }while (data.moveToNext());
         if(mCallBack != null)
-            mCallBack.finish(videoFiles);
+            mCallBack.finish(videoFiles, mFolders);
     }
 
     private void handleAudioData(Cursor data) {
     }
 
     private void handleImageData(Cursor data) {
+        mFolders = new ArrayList<>();
         ArrayList<MediaFile> imageFiles = new ArrayList<>();
         data.moveToFirst();
         do{
@@ -131,12 +136,35 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                     data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
             String size = data.getString(
                     data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
-            MediaFile mediaFile = new MediaFile(
+            MediaFile imageFile = new MediaFile(
                     MediaFile.TYPE_IMAGE, name, path, dataAdded, size);
-            imageFiles.add(mediaFile);
+            imageFiles.add(imageFile);
+            File folderFile = new File(path).getParentFile();
+            if(folderFile.exists()){
+                if(folderFile != null && folderFile.exists()){
+                    Folder tmpFolder = getFolderByPath(folderFile.getAbsolutePath());
+                    if(tmpFolder == null){
+                        List<MediaFile> mediaFiles = new ArrayList<>();
+                        mediaFiles.add(imageFile);
+                        Folder folder = new Folder(
+                                folderFile.getName(), folderFile.getAbsolutePath(), mediaFiles);
+                        mFolders.add(folder);
+                    }else{
+                        tmpFolder.getmMediaFiles().add(imageFile);
+                    }
+                }
+            }
         }while (data.moveToNext());
         if (mCallBack != null)
-            mCallBack.finish(imageFiles);
+            mCallBack.finish(imageFiles, mFolders);
+    }
+
+    private Folder getFolderByPath(String path){
+        for(Folder folder : mFolders){
+            if(path.equals(folder.getmPath()))
+                return folder;
+        }
+        return null;
     }
 
     @Override
@@ -145,7 +173,7 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     public interface DataLoaderCallBack{
-        public void finish(ArrayList<MediaFile> mediaFiles);
+        public void finish(List<MediaFile> mediaFiles, List<Folder> folders);
     }
 
     private DataLoaderCallBack mCallBack;

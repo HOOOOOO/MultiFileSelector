@@ -83,7 +83,7 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration{
         if(mOrientation == LinearLayoutManager.HORIZONTAL)
             outRect.set(0, 0, 0, mDividerHeight);
         if(mOrientation == ORIENTATION_BOTH) {
-            outRect.set(mDividerHeight, mDividerHeight, 0, 0);
+            outRect.set(0, 0, mDividerHeight, mDividerHeight);
         }
     }
 

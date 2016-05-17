@@ -10,7 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <com.hochan.multi_file_selector.view.SquaredImageView
-        android:id="@+id/siv_shadow"
+        android:id="@+id/siv_mask"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:src="@drawable/ic_check_circle_white"
+        android:scaleType="center"
+        android:background="#80000000"/>
 </FrameLayout>
