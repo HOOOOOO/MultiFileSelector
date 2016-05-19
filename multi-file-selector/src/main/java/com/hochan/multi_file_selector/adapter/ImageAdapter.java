@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.hochan.multi_file_selector.MultiImageSelectorFragment;
 import com.hochan.multi_file_selector.R;
+import com.hochan.multi_file_selector.data.ImageFile;
 import com.hochan.multi_file_selector.data.MediaFile;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
 import com.hochan.multi_file_selector.tool.ScreenTools;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class ImageAdapter extends RecyclerView.Adapter{
 
-    private ArrayList<MediaFile> mImages = new ArrayList<>();
+    private ArrayList<MediaFile> mImageFiles = new ArrayList<>();
     private ArrayList<MediaFile> mSelectedImages = new ArrayList<>();
     private Context mContext;
 
@@ -35,7 +36,7 @@ public class ImageAdapter extends RecyclerView.Adapter{
     }
 
     public void setData(List<MediaFile> images){
-        mImages = (ArrayList<MediaFile>) images;
+        mImageFiles = (ArrayList<MediaFile>) images;
         notifyDataSetChanged();
     }
 
@@ -52,15 +53,17 @@ public class ImageAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
-        if(mSelectedImages.contains(mImages.get(position))){
+        ImageFile imageFile = (ImageFile) mImageFiles.get(position);
+
+        if(mSelectedImages.contains(mImageFiles.get(position))){
             imageViewHolder.sivMask.setVisibility(View.VISIBLE);
         }else{
             imageViewHolder.sivMask.setVisibility(View.GONE);
         }
-        File imageFile = new File(mImages.get(position).getmPath());
-        if(imageFile.exists()) {
+        File image = new File(mImageFiles.get(position).getmPath());
+        if(image.exists()) {
             Picasso.with(mContext)
-                    .load(imageFile)
+                    .load(image)
                     .tag(MultiImageSelectorFragment.TAG)
                     .resize(mGridWidth, mGridWidth)
                     .centerCrop()
@@ -70,7 +73,7 @@ public class ImageAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        return mImages.size();
+        return mImageFiles.size();
     }
 
     class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -86,11 +89,11 @@ public class ImageAdapter extends RecyclerView.Adapter{
 
         @Override
         public void onClick(View v) {
-            if(mSelectedImages.contains(mImages.get(getPosition()))){
-                mSelectedImages.remove(mImages.get(getPosition()));
+            if(mSelectedImages.contains(mImageFiles.get(getPosition()))){
+                mSelectedImages.remove(mImageFiles.get(getPosition()));
                 sivMask.setVisibility(View.GONE);
             }else {
-                mSelectedImages.add(mImages.get(getPosition()));
+                mSelectedImages.add(mImageFiles.get(getPosition()));
                 sivMask.setVisibility(View.VISIBLE);
             }
             System.out.println("已选图片数目："+mSelectedImages.size());

@@ -30,23 +30,19 @@ public class MultiFileSelectorActivity extends AppCompatActivity {
             case MediaFile.TYPE_IMAGE:
                 mToolbar.setTitle("选择图片");
                 bundle.putInt(TYPE_SELECT, MediaFile.TYPE_IMAGE);
-                getSupportFragmentManager().beginTransaction().add(R.id.rl_content,
-                        Fragment.instantiate(this,
-                                MultiImageSelectorFragment.class.getName(),
-                                bundle)).commit();
                 break;
             case MediaFile.TYPE_AUDIO:
                 mToolbar.setTitle("选择音乐");
                 bundle.putInt(TYPE_SELECT, MediaFile.TYPE_AUDIO);
-                getSupportFragmentManager().beginTransaction().add(R.id.rl_content,
-                        Fragment.instantiate(this,
-                                MultiImageSelectorFragment.class.getName(),
-                                bundle)).commit();
                 break;
             case MediaFile.TYPE_VIDEO:
                 mToolbar.setTitle("选择视频");
                 break;
         }
+        getSupportFragmentManager().beginTransaction().add(R.id.rl_content,
+                Fragment.instantiate(this,
+                        MultiImageSelectorFragment.class.getName(),
+                        bundle)).commit();
 
 
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back);

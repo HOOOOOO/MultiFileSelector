@@ -1,5 +1,7 @@
 package com.hochan.multi_file_selector.data;
 
+import java.util.ArrayList;
+
 /**
  * Created by Administrator on 2016/5/10.
  */
@@ -9,13 +11,19 @@ public class MediaFile {
     public final static int TYPE_AUDIO = 1;
     public final static int TYPE_VIDEO = 2;
 
+    public final static ArrayList<String> TYPE_NAME = new ArrayList<>();
+
+    static {
+        TYPE_NAME.add(TYPE_IMAGE, "图片");
+        TYPE_NAME.add(TYPE_AUDIO, "音频");
+        TYPE_NAME.add(TYPE_VIDEO, "视频");
+    }
+
     private int mType;
     private String mName;
     private String mPath;
     private String mDataAdded;
     private String mSize;
-    private String mArtist;
-    private String mDuration;
 
     public MediaFile(int mType, String mName, String mPath, String mDataAdded, String mSzie) {
         this.mType = mType;
@@ -34,14 +42,6 @@ public class MediaFile {
             e.printStackTrace();
         }
         return super.equals(o);
-    }
-
-    public String getmArtist() {
-        return mArtist;
-    }
-
-    public void setmArtist(String mArtist) {
-        this.mArtist = mArtist;
     }
 
     public int getmType() {
@@ -84,11 +84,4 @@ public class MediaFile {
         this.mDataAdded = mDataAdded;
     }
 
-    public String getmDuration() {
-        return mDuration;
-    }
-
-    public void setmDuration(String mDuration) {
-        this.mDuration = mDuration;
-    }
 }

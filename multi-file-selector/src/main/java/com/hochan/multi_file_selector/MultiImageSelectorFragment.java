@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,8 +19,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.hochan.multi_file_selector.adapter.AudioAdapter;
 import com.hochan.multi_file_selector.adapter.FolderAdapter;
 import com.hochan.multi_file_selector.adapter.ImageAdapter;
+import com.hochan.multi_file_selector.data.AudioFile;
 import com.hochan.multi_file_selector.data.Folder;
 import com.hochan.multi_file_selector.data.MediaFile;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
@@ -42,13 +45,18 @@ public class MultiImageSelectorFragment extends Fragment
 
     private Context mContext;
     private DataLoader mLoaderCallback = null;
+
     private ImageAdapter mImageAdapter;
+    private static int mImageColumn = 3;
+    private static int mImageGap = 3;
+
+    private AudioAdapter mAudioAdapter;
     private FolderAdapter mFolderAdapter;
     private int mCurrentAlbum = 0;
     private int mSelectType;
 
     //view
-    private RecyclerView rclvImages;
+    private RecyclerView rclvMediaFiles;
     private Button btnFolders, btnOpera, btnArtists;
     private ListPopupWindow mFolderPopupWindow;
 
@@ -72,23 +80,27 @@ public class MultiImageSelectorFragment extends Fragment
         mSelectType = getArguments().getInt(MultiFileSelectorActivity.TYPE_SELECT);
         System.out.println("选择文件类型："+mSelectType);
 
-        rclvImages = (RecyclerView) view.findViewById(R.id.rclv_images);
+        rclvMediaFiles = (RecyclerView) view.findViewById(R.id.rclv_images);
         btnArtists = (Button) view.findViewById(R.id.btn_artists);
         btnFolders = (Button) view.findViewById(R.id.btn_folders);
         btnOpera = (Button) view.findViewById(R.id.btn_opera);
 
+        btnOpera.setText("所有"+MediaFile.TYPE_NAME.get(mSelectType));
+
+        mFolderAdapter = new FolderAdapter(mContext);
+
         switch (mSelectType){
             case MediaFile.TYPE_IMAGE:
                 btnArtists.setVisibility(View.GONE);
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 3);
-                rclvImages.setLayoutManager(gridLayoutManager);
-                rclvImages.addItemDecoration(new RecycleViewDivider(mContext,
-                        RecycleViewDivider.ORIENTATION_BOTH, ScreenTools.dip2px(mContext, 3), 0));
-                mImageAdapter = new ImageAdapter(mContext, 3);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, mImageColumn);
+                rclvMediaFiles.setLayoutManager(gridLayoutManager);
+                rclvMediaFiles.addItemDecoration(new RecycleViewDivider(mContext,
+                        RecycleViewDivider.ORIENTATION_BOTH, ScreenTools.dip2px(mContext, mImageGap), 0));
+
+                mImageAdapter = new ImageAdapter(mContext, mImageColumn);
                 mImageAdapter.setImageAdpaterListener(this);
-                mFolderAdapter = new FolderAdapter(mContext);
-                rclvImages.setAdapter(mImageAdapter);
-                rclvImages.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                rclvMediaFiles.setAdapter(mImageAdapter);
+                rclvMediaFiles.setOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                         if(newState == RecyclerView.SCROLL_STATE_SETTLING)
@@ -99,6 +111,13 @@ public class MultiImageSelectorFragment extends Fragment
                 });
                 break;
             case MediaFile.TYPE_AUDIO:
+                btnArtists.setVisibility(View.VISIBLE);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+                rclvMediaFiles.setLayoutManager(linearLayoutManager);
+
+                mAudioAdapter = new AudioAdapter(mContext);
+                mAudioAdapter.setmAdapterListener(this);
+                rclvMediaFiles.setAdapter(mAudioAdapter);
                 break;
             case MediaFile.TYPE_VIDEO:
                 break;
@@ -136,9 +155,10 @@ public class MultiImageSelectorFragment extends Fragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mLoaderCallback = new DataLoader(getActivity(), MediaFile.TYPE_IMAGE);
+        mLoaderCallback = new DataLoader(getActivity(), mSelectType);
         mLoaderCallback.setCallBack(this);
-        getActivity().getSupportLoaderManager().initLoader(MediaFile.TYPE_IMAGE, null, mLoaderCallback);
+        getActivity().getSupportLoaderManager().initLoader(
+                mSelectType, null, mLoaderCallback);
     }
 
     private void createFolderPopupWindow(){
@@ -167,12 +187,16 @@ public class MultiImageSelectorFragment extends Fragment
         switch (mSelectType) {
             case MediaFile.TYPE_IMAGE:
                 mImageAdapter.setData((ArrayList<MediaFile>) mediaFiles);
-                Folder folder = new Folder("所有图片", null, mediaFiles);
+                Folder folder = new Folder(MediaFile.TYPE_IMAGE, "所有图片", null, mediaFiles);
                 folders.add(0, folder);
                 mFolderAdapter.setData(folders);
                 System.out.println(mediaFiles.size());
                 break;
             case MediaFile.TYPE_AUDIO:
+                mAudioAdapter.setData(mediaFiles);
+                Folder audioFolder = new Folder(MediaFile.TYPE_AUDIO, "所有音乐", null, mediaFiles);
+                folders.add(0, audioFolder);
+                mFolderAdapter.setData(folders);
                 System.out.println(mediaFiles.size());
                 break;
             default:

@@ -72,7 +72,7 @@ public class FolderAdapter extends BaseAdapter{
             folderViewHolder.tvPath.setVisibility(View.VISIBLE);
         }
         Picasso.with(mContext)
-                .load(new File(getItem(position).getmMediaFiles().get(0).getmPath()))
+                .load(mFolders.get(position).getmFolderCover())
                 .resize(mFolderIconSize, mFolderIconSize)
                 .centerCrop()
                 .into(folderViewHolder.sivIcon);

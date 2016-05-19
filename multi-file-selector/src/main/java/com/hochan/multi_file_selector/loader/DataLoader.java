@@ -8,7 +8,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import com.hochan.multi_file_selector.data.AudioFile;
 import com.hochan.multi_file_selector.data.Folder;
+import com.hochan.multi_file_selector.data.ImageFile;
 import com.hochan.multi_file_selector.data.MediaFile;
 
 import java.io.File;
@@ -20,32 +22,6 @@ import java.util.List;
  */
 public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private final String[] IMAGE_PROJECTION = {
-            MediaStore.Images.Media.DATA,          //0
-            MediaStore.Images.Media.DISPLAY_NAME,  //1
-            MediaStore.Images.Media.DATE_ADDED,    //2
-            MediaStore.Images.Media.SIZE,          //3
-            MediaStore.Images.Media.MIME_TYPE,     //4
-            MediaStore.Images.Media._ID };         //5
-//
-//    private final String[] VIDEO_PROJECTION = {
-//            MediaStore.Video.Media.DATA,           //0
-//            MediaStore.Video.Media.DISPLAY_NAME,   //1
-//            MediaStore.Video.Media.DATE_ADDED,     //2
-//            MediaStore.Video.Media.MIME_TYPE,      //3
-//            MediaStore.Video.Media.SIZE,           //4
-//            MediaStore.Video.Media._ID,            //5
-//            MediaStore.Video.Media.DURATION};      //6
-//
-//    private final String[] AUDIO_PROJECTION = {
-//            MediaStore.Audio.Media.DATA,           //0
-//            MediaStore.Audio.Media.DISPLAY_NAME,   //1
-//            MediaStore.Audio.Media.DATE_ADDED,     //2
-//            MediaStore.Audio.Media.MIME_TYPE,      //3
-//            MediaStore.Audio.Media.SIZE,           //4
-//            MediaStore.Audio.Media._ID,            //5
-//            MediaStore.Audio.Media.ARTIST,         //6
-//            MediaStore.Audio.Media.DURATION};      //7
 
     private static ArrayList<String> IMAGE_PROJECTION_LIST = new ArrayList<>();
     private static ArrayList<String> AUDIO_PROJECTION_LIST = new ArrayList<>();
@@ -53,29 +29,30 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
     private static ArrayList<ArrayList<String>> MEDIA_PROJECTION_LIST = new ArrayList<>();
 
     static {
-        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.DATA);
-        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.DISPLAY_NAME);
-        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.DATE_ADDED);
-        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.SIZE);
-        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.MIME_TYPE);
-        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media._ID);
+        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.DATA);          //0
+        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.DISPLAY_NAME);  //1
+        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.DATE_ADDED);    //2
+        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.SIZE);          //3
+        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media.MIME_TYPE);     //4
+        IMAGE_PROJECTION_LIST.add(MediaStore.Images.Media._ID);           //5
 
-        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.DATA);
-        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.DISPLAY_NAME);
-        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.DATE_ADDED);
-        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.SIZE);
-        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.MIME_TYPE);
-        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media._ID);
-        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.ARTIST);
-        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.DURATION);
+        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.DATA);           //0
+        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.DISPLAY_NAME);   //1
+        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.DATE_ADDED);     //2
+        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.SIZE);           //3
+        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.MIME_TYPE);      //4
+        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media._ID);            //5
+        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.ARTIST);         //6
+        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.DURATION);       //7
+        AUDIO_PROJECTION_LIST.add(MediaStore.Audio.Media.ALBUM_ID);       //8
 
-        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DATA);
-        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DISPLAY_NAME);
-        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DATE_ADDED);
-        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.SIZE);
-        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.MIME_TYPE);
-        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media._ID);
-        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DURATION);
+        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DATA);           //0
+        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DISPLAY_NAME);   //1
+        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DATE_ADDED);     //2
+        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.SIZE);           //3
+        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.MIME_TYPE);      //4
+        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media._ID);            //5
+        VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DURATION);       //6
 
         MEDIA_PROJECTION_LIST.add(MediaFile.TYPE_IMAGE, IMAGE_PROJECTION_LIST);
         MEDIA_PROJECTION_LIST.add(MediaFile.TYPE_AUDIO, AUDIO_PROJECTION_LIST);
@@ -90,11 +67,13 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
     public DataLoader(Context context, int type){
         this.mContext = context;
         this.mType = type;
+        System.out.println("dataloder type:"+type);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (mType){
+        System.out.println("dataloder:"+id);
+        switch (id){
             case MediaFile.TYPE_IMAGE:
                 System.out.println(IMAGE_PROJECTION_LIST.get(3));
                 System.out.println(IMAGE_PROJECTION_LIST.get(4));
@@ -102,10 +81,10 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                 CursorLoader acursorLoader = new CursorLoader(mContext,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         (String[]) IMAGE_PROJECTION_LIST.toArray(new String[IMAGE_PROJECTION_LIST.size()]),
-                        /*IMAGE_PROJECTION,*/ null, null, null);
                         //?对应后面的selectionArgs用于转义特殊字符
-                        //IMAGE_PROJECTION_LIST.get(3)+">0 AND "+IMAGE_PROJECTION_LIST.get(4)+"=? OR "+IMAGE_PROJECTION_LIST.get(4)+"=? ",
-                        //new String[]{"image/jpeg", "image/png"}, IMAGE_PROJECTION_LIST.get(2) + " DESC");
+                        IMAGE_PROJECTION_LIST.get(3)+">0 AND "+IMAGE_PROJECTION_LIST.get(4)+"=? OR "+IMAGE_PROJECTION_LIST.get(4)+"=? ",
+                        new String[]{"image/jpeg", "image/png"},
+                        IMAGE_PROJECTION_LIST.get(2) + " DESC");
                 return acursorLoader;
             case MediaFile.TYPE_VIDEO:
                 CursorLoader bcursorLoader = new CursorLoader(mContext,
@@ -117,10 +96,10 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
             case MediaFile.TYPE_AUDIO:
                 CursorLoader ccursorLoader = new CursorLoader(mContext,
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        (String[]) AUDIO_PROJECTION_LIST.toArray(),
-                        AUDIO_PROJECTION_LIST.get(3)+">0 AND ",
+                        (String[]) AUDIO_PROJECTION_LIST.toArray(new String[AUDIO_PROJECTION_LIST.size()]),
+                        AUDIO_PROJECTION_LIST.get(3)+">0 ",
                         null, AUDIO_PROJECTION_LIST.get(2)+" DESC");
-                break;
+                return ccursorLoader;
         }
         return null;
     }
@@ -142,34 +121,30 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                             data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(2)));
                     String size = data.getString(
                             data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(3)));
-                    MediaFile mediaFile = null;
+
                     switch (mType) {
                         case MediaFile.TYPE_IMAGE:
-                            mediaFile = new MediaFile(MediaFile.TYPE_IMAGE,
+                            ImageFile imageFile = new ImageFile(MediaFile.TYPE_IMAGE,
                                     displayName, path, dateAdded, size);
+                            mMediaFiles.add(imageFile);
+                            addToFolder(imageFile);
                             break;
                         case MediaFile.TYPE_AUDIO:
+                            AudioFile audioFile = new AudioFile(MediaFile.TYPE_AUDIO,
+                                    displayName, path, dateAdded, size);
+                            audioFile.setmDuration(
+                                    data.getLong(data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(7))));
+                            audioFile.setmAlbumId(data.getLong(data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(8))));
+                            mMediaFiles.add(audioFile);
+                            addToFolder(audioFile);
                             break;
                         case MediaFile.TYPE_VIDEO:
                             break;
                     }
-                    File folderFile = new File(path).getParentFile();
-                    if (folderFile.exists()) {
-                        if (folderFile != null && folderFile.exists()) {
-                            Folder tmpFolder = getFolderByPath(folderFile.getAbsolutePath());
-                            if (tmpFolder == null) {
-                                List<MediaFile> mediaFiles = new ArrayList<>();
-                                mediaFiles.add(mediaFile);
-                                Folder folder = new Folder(
-                                        folderFile.getName(), folderFile.getAbsolutePath(), mediaFiles);
-                                mFolders.add(folder);
-                            } else {
-                                tmpFolder.getmMediaFiles().add(mediaFile);
-                            }
-                        }
-                    }
+
                 } while (data.moveToNext());
                 if (mCallBack != null) {
+                    System.out.println(mMediaFiles.size());
                     mCallBack.finish(mMediaFiles, mFolders);
                 }
             } else {
@@ -180,72 +155,23 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
-//    private void handleVideoData(Cursor data) {
-//        ArrayList<MediaFile> videoFiles = new ArrayList<>();
-//        data.moveToFirst();
-//        do{
-//            String path = data.getString(
-//                    data.getColumnIndexOrThrow(VIDEO_PROJECTION[0]));
-//            String name = data.getString(
-//                    data.getColumnIndexOrThrow(VIDEO_PROJECTION[1]));
-//            String dateAdded = data.getString(
-//                    data.getColumnIndexOrThrow(VIDEO_PROJECTION[2]));
-//            String size = data.getString(data.getColumnIndexOrThrow(VIDEO_PROJECTION[4]));
-//            MediaFile videoFile = new MediaFile(
-//                    MediaFile.TYPE_VIDEO, name, path, dateAdded, size);
-//            videoFile.setmDuration(
-//                    data.getString(data.getColumnIndexOrThrow(VIDEO_PROJECTION[6])));
-//            videoFiles.add(videoFile);
-//        }while (data.moveToNext());
-//        if(mCallBack != null)
-//            mCallBack.finish(videoFiles, mFolders);
-//    }
-
-//    private void handleAudioData(Cursor data) {
-//        mFolders = new ArrayList<>();
-//        ArrayList<MediaFile> audioFiles = new ArrayList<>();
-//        data.moveToFirst();
-//        do{
-//            String path = data.getString(data.getColumnIndexOrThrow(AUDIO_PROJECTION[0]));
-//
-//        } while (data.moveToNext());
-//    }
-
-//    private void handleImageData(Cursor data) {
-//        mFolders = new ArrayList<>();
-//        ArrayList<MediaFile> imageFiles = new ArrayList<>();
-//        data.moveToFirst();
-//        do{
-//            String path = data.getString(
-//                    data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
-//            String name = data.getString(
-//                    data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
-//            String dataAdded = data.getString(
-//                    data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
-//            String size = data.getString(
-//                    data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
-//            MediaFile imageFile = new MediaFile(
-//                    MediaFile.TYPE_IMAGE, name, path, dataAdded, size);
-//            imageFiles.add(imageFile);
-//            File folderFile = new File(path).getParentFile();
-//            if(folderFile.exists()){
-//                if(folderFile != null && folderFile.exists()){
-//                    Folder tmpFolder = getFolderByPath(folderFile.getAbsolutePath());
-//                    if(tmpFolder == null){
-//                        List<MediaFile> mediaFiles = new ArrayList<>();
-//                        mediaFiles.add(imageFile);
-//                        Folder folder = new Folder(
-//                                folderFile.getName(), folderFile.getAbsolutePath(), mediaFiles);
-//                        mFolders.add(folder);
-//                    }else{
-//                        tmpFolder.getmMediaFiles().add(imageFile);
-//                    }
-//                }
-//            }
-//        }while (data.moveToNext());
-//        if (mCallBack != null)
-//            mCallBack.finish(imageFiles, mFolders);
-//    }
+    private void addToFolder(MediaFile mediaFile){
+        File folderFile = new File(mediaFile.getmPath()).getParentFile();
+        if (folderFile.exists()) {
+            if (folderFile != null && folderFile.exists()) {
+                Folder tmpFolder = getFolderByPath(folderFile.getAbsolutePath());
+                if (tmpFolder == null) {
+                    List<MediaFile> mediaFiles = new ArrayList<>();
+                    mediaFiles.add(mediaFile);
+                    Folder folder = new Folder(mType,
+                            folderFile.getName(), folderFile.getAbsolutePath(), mediaFiles);
+                    mFolders.add(folder);
+                } else {
+                    tmpFolder.getmMediaFiles().add(mediaFile);
+                }
+            }
+        }
+    }
 
     private Folder getFolderByPath(String path){
         for(Folder folder : mFolders){
