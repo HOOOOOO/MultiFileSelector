@@ -144,6 +144,7 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
                         String mimeType = data.getString(
                                 data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MIME_TYPE));
+                        System.out.println(mimeType);
                         int type = NoneMediaFile.TYPE_PDF;
                         switch (mimeType){
                             case "application/pdf":
@@ -151,6 +152,9 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                                 break;
                             case "text/plain":
                                 type = NoneMediaFile.TYPE_TXT;
+                                break;
+                            case "application/vnd.ms-excel":
+                                type = NoneMediaFile.TYPE_XLS;
                                 break;
                         }
 

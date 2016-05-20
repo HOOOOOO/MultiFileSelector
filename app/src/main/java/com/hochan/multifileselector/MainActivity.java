@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hochan.multi_file_selector.MultiFileSelectorActivity;
-import com.hochan.multi_file_selector.MultiImageSelectorFragment;
+import com.hochan.multi_file_selector.MultiFileSelectorFragment;
 import com.hochan.multi_file_selector.data.File;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Toolbar mToolbar;
-    private Button btnSelectImage, btnSelectAudio, btnSelectVideo, btnSelectText;
+    private ImageButton btnSelectImage, btnSelectAudio, btnSelectVideo, btnSelectText;
     private TextView tvResult;
 
     @Override
@@ -29,13 +31,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mToolbar.setTitle(R.string.app_name);
         setSupportActionBar(mToolbar);
 
-        btnSelectImage = (Button) findViewById(R.id.btn_select_image);
+        btnSelectImage = (ImageButton) findViewById(R.id.btn_select_image);
         btnSelectImage.setOnClickListener(this);
-        btnSelectAudio = (Button) findViewById(R.id.btn_select_audio);
+        btnSelectAudio = (ImageButton) findViewById(R.id.btn_select_audio);
         btnSelectAudio.setOnClickListener(this);
-        btnSelectVideo = (Button) findViewById(R.id.btn_select_video);
+        btnSelectVideo = (ImageButton) findViewById(R.id.btn_select_video);
         btnSelectVideo.setOnClickListener(this);
-        btnSelectText = (Button) findViewById(R.id.btn_select_text);
+        btnSelectText = (ImageButton) findViewById(R.id.btn_select_text);
         btnSelectText.setOnClickListener(this);
 
         tvResult = (TextView) findViewById(R.id.tv_result);
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
             ArrayList<String> resultList = data.getStringArrayListExtra(
-                    MultiImageSelectorFragment.EXTRA_RESULT);
+                    MultiFileSelectorFragment.EXTRA_RESULT);
             for(String str : resultList){
                 System.out.println(str);
                 tvResult.append(str+"\n");

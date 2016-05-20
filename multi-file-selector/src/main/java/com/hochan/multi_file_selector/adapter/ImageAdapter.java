@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hochan.multi_file_selector.MultiImageSelectorFragment;
+import com.hochan.multi_file_selector.MultiFileSelectorFragment;
 import com.hochan.multi_file_selector.R;
 import com.hochan.multi_file_selector.data.ImageFile;
 import com.hochan.multi_file_selector.data.File;
@@ -63,7 +63,8 @@ public class ImageAdapter extends RecyclerView.Adapter{
         if(image.exists()) {
             Picasso.with(mContext)
                     .load(image)
-                    .tag(MultiImageSelectorFragment.TAG)
+                    .placeholder(R.drawable.icon_list_large_image_no_shadow)
+                    .tag(MultiFileSelectorFragment.TAG)
                     .resize(mGridWidth, mGridWidth)
                     .centerCrop()
                     .into(imageViewHolder.sivImage);

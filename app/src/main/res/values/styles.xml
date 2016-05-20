@@ -20,7 +20,12 @@
     </style>
 
     <style name="DefaultButtonStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">55dp</item>
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:scaleType">centerInside</item>
     </style>
+
 </resources>

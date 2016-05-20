@@ -6,8 +6,9 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rclv_images"
-        android:layout_marginRight="-3dp"
-        android:layout_marginBottom="-3dp"
+        android:scrollbars="vertical"
+        android:paddingRight="-3dp"
+        android:paddingBottom="-3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
@@ -18,19 +19,20 @@
         android:orientation="horizontal"
         android:paddingTop="3dp">
         <Button
-            android:id="@+id/btn_folders"
-            android:text="所有图片"
-            style="@style/DefaultButtonStyle"
-            android:layout_weight="1"/>
-        <Button
             android:id="@+id/btn_artists"
             android:text="所有歌手"
+            android:visibility="gone"
             style="@style/DefaultButtonStyle"
             android:layout_weight="1"/>
         <Button
             android:id="@+id/btn_opera"
-            android:text="取消"
-            style="@style/DefaultButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/selector_finish_button"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"/>
     </LinearLayout>
 

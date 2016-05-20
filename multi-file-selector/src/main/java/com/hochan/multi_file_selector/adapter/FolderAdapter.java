@@ -8,12 +8,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hochan.multi_file_selector.R;
+import com.hochan.multi_file_selector.data.File;
 import com.hochan.multi_file_selector.data.Folder;
 import com.hochan.multi_file_selector.tool.ScreenTools;
 import com.hochan.multi_file_selector.view.SquaredImageView;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +54,7 @@ public class FolderAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         FolderViewHolder folderViewHolder = null;
+        Folder folder = mFolders.get(position);
         if(convertView == null){
             folderViewHolder = new FolderViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.layout_folder_item, parent, false);
@@ -71,11 +72,26 @@ public class FolderAdapter extends BaseAdapter{
             folderViewHolder.tvPath.setText(getItem(position).getmPath());
             folderViewHolder.tvPath.setVisibility(View.VISIBLE);
         }
-        Picasso.with(mContext)
-                .load(mFolders.get(position).getmFolderCover())
-                .resize(mFolderIconSize, mFolderIconSize)
-                .centerCrop()
-                .into(folderViewHolder.sivIcon);
+
+        switch (folder.getmMediaType()){
+            case File.TYPE_AUDIO:
+                Picasso.with(mContext)
+                    .load(mFolders.get(position).getmFolderCover())
+                    .placeholder(R.drawable.icon_list_audiofile)
+                    .resize(mFolderIconSize, mFolderIconSize)
+                    .centerCrop()
+                    .into(folderViewHolder.sivIcon);
+                break;
+            case File.TYPE_IMAGE:
+                Picasso.with(mContext)
+                        .load(mFolders.get(position).getmFolderCover())
+                        .placeholder(R.drawable.icon_list_large_image_no_shadow)
+                        .resize(mFolderIconSize, mFolderIconSize)
+                        .centerCrop()
+                        .into(folderViewHolder.sivIcon);
+                break;
+        }
+
         return convertView;
     }
 

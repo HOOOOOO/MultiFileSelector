@@ -18,6 +18,7 @@ import com.hochan.multi_file_selector.R;
 import com.hochan.multi_file_selector.data.AudioFile;
 import com.hochan.multi_file_selector.data.File;
 import com.hochan.multi_file_selector.data.NoneMediaFile;
+import com.hochan.multi_file_selector.data.VideoFile;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
 import com.hochan.multi_file_selector.tool.ScreenTools;
 import com.hochan.multi_file_selector.tool.Tool;
@@ -30,20 +31,20 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/5/19.
  */
-public class AudioAdapter extends RecyclerView.Adapter{
+public class LinearAdapter extends RecyclerView.Adapter{
 
     final public static Uri SARTWORKURI = Uri
             .parse("content://media/external/audio/albumart");
 
     private Context mContext;
     private List<File> mFiles = new ArrayList<>();
-    private List<File> mSelectedAudios = new ArrayList<>();
+    private List<File> mSelectedFiles = new ArrayList<>();
     private int mAlbumSize;
     private int mType;
 
     private MediaFileAdapterListener mAdapterListener;
 
-    public AudioAdapter(Context context, int type){
+    public LinearAdapter(Context context, int type){
         this.mContext = context;
         this.mType = type;
         this.mAlbumSize = ScreenTools.dip2px(context, 50);
@@ -57,30 +58,69 @@ public class AudioAdapter extends RecyclerView.Adapter{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_audio_item, parent, false);
-        return new AudioViewHolder(view);
+        return new LinearViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        AudioViewHolder audioViewHolder = (AudioViewHolder) holder;
+        LinearViewHolder viewHolder = (LinearViewHolder) holder;
         if(mType == File.TYPE_AUDIO) {
             AudioFile audioFile = (AudioFile) mFiles.get(position);
-            if (mSelectedAudios.contains(audioFile)) {
-                audioViewHolder.ivMask.setVisibility(View.VISIBLE);
+            if (mSelectedFiles.contains(audioFile)) {
+                viewHolder.ivCheck.setImageResource(R.drawable.checkbox_checked);
             } else {
-                audioViewHolder.ivMask.setVisibility(View.GONE);
+                viewHolder.ivCheck.setImageResource(R.drawable.checkbox_unchecked);
             }
-            audioViewHolder.tvName.setText(audioFile.getmName());
-            audioViewHolder.tvDuration.setText(Tool.getDurationFormat(audioFile.getmDuration()));
+            viewHolder.tvName.setText(audioFile.getmName());
+            viewHolder.tvDuration.setText(Tool.getDurationFormat(audioFile.getmDuration()));
 
             Picasso.with(mContext)
                     .load(audioFile.getmAlbumUri())
+                    .placeholder(R.drawable.icon_list_audiofile)
                     .resize(mAlbumSize, mAlbumSize)
                     .centerCrop()
-                    .into(audioViewHolder.sivIcon);
+                    .into(viewHolder.sivIcon);
         }else if(mType == File.TYPE_MEDIANONE){
             NoneMediaFile noneMediaFile = (NoneMediaFile) mFiles.get(position);
-            audioViewHolder.tvName.setText(noneMediaFile.getmName());
+
+            if (mSelectedFiles.contains(noneMediaFile)) {
+                viewHolder.ivCheck.setImageResource(R.drawable.checkbox_checked);
+            } else {
+                viewHolder.ivCheck.setImageResource(R.drawable.checkbox_unchecked);
+            }
+
+            viewHolder.tvName.setText(noneMediaFile.getmName());
+            viewHolder.tvDuration.setVisibility(View.GONE);
+            switch (noneMediaFile.getmType()){
+                case NoneMediaFile.TYPE_PDF:
+                    viewHolder.sivIcon.setImageResource(R.drawable.icon_list_pdf);
+                    break;
+                case NoneMediaFile.TYPE_TXT:
+                    viewHolder.sivIcon.setImageResource(R.drawable.icon_list_txtfile);
+                    break;
+                case NoneMediaFile.TYPE_DOCX:
+                    viewHolder.sivIcon.setImageResource(R.drawable.icon_list_doc);
+                    break;
+                case NoneMediaFile.TYPE_XLS:
+                    viewHolder.sivIcon.setImageResource(R.drawable.icon_list_excel);
+                    break;
+            }
+        }else if(mType == File.TYPE_VIDEO){
+            VideoFile videoFile = (VideoFile) mFiles.get(position);
+            if (mSelectedFiles.contains(videoFile)) {
+                viewHolder.ivCheck.setImageResource(R.drawable.checkbox_checked);
+            } else {
+                viewHolder.ivCheck.setImageResource(R.drawable.checkbox_unchecked);
+            }
+            viewHolder.tvName.setText(videoFile.getmName());
+            viewHolder.tvDuration.setText(Tool.getDurationFormat(videoFile.getmDuration()));
+
+            Picasso.with(mContext)
+                    .load("dsads")
+                    .placeholder(R.drawable.icon_list_videofile)
+                    .resize(mAlbumSize, mAlbumSize)
+                    .centerCrop()
+                    .into(viewHolder.sivIcon);
         }
     }
 
@@ -89,32 +129,32 @@ public class AudioAdapter extends RecyclerView.Adapter{
         return mFiles.size();
     }
 
-    class AudioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class LinearViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView tvName, tvDuration;
         public SquaredImageView sivIcon;
-        public ImageView ivMask;
+        public ImageView ivCheck;
 
-        public AudioViewHolder(View itemView) {
+        public LinearViewHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
             tvDuration = (TextView) itemView.findViewById(R.id.tv_duration);
             sivIcon = (SquaredImageView) itemView.findViewById(R.id.siv_icon);
-            ivMask = (ImageView) itemView.findViewById(R.id.iv_mask);
+            ivCheck = (ImageView) itemView.findViewById(R.id.iv_mask);
 
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            if(mSelectedAudios.contains(mFiles.get(getPosition()))){
-                ivMask.setVisibility(View.INVISIBLE);
-                mSelectedAudios.remove(mFiles.get(getPosition()));
+            if(mSelectedFiles.contains(mFiles.get(getPosition()))){
+                ivCheck.setImageResource(R.drawable.checkbox_unchecked);
+                mSelectedFiles.remove(mFiles.get(getPosition()));
             }else{
-                ivMask.setVisibility(View.VISIBLE);
-                mSelectedAudios.add(mFiles.get(getPosition()));
+                ivCheck.setImageResource(R.drawable.checkbox_checked);
+                mSelectedFiles.add(mFiles.get(getPosition()));
             }
-            mAdapterListener.fileSelected(mSelectedAudios.size());
+            mAdapterListener.fileSelected(mSelectedFiles.size());
         }
     }
 
@@ -148,7 +188,7 @@ public class AudioAdapter extends RecyclerView.Adapter{
         this.mAdapterListener = mAdapterListener;
     }
 
-    public List<File> getmSelectedAudios() {
-        return mSelectedAudios;
+    public List<File> getmSelectedFiles() {
+        return mSelectedFiles;
     }
 }

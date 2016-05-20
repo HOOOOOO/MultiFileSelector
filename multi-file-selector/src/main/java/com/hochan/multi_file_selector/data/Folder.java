@@ -61,4 +61,8 @@ public class Folder {
     public void setmFolderCover(Uri mFolderCover) {
         this.mFolderCover = mFolderCover;
     }
+
+    public int getmMediaType() {
+        return mMediaType;
+    }
 }
