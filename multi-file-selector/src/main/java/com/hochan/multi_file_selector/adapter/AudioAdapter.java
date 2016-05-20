@@ -1,7 +1,6 @@
 package com.hochan.multi_file_selector.adapter;
 
 import android.annotation.TargetApi;
-import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,9 +16,11 @@ import android.widget.TextView;
 
 import com.hochan.multi_file_selector.R;
 import com.hochan.multi_file_selector.data.AudioFile;
-import com.hochan.multi_file_selector.data.MediaFile;
+import com.hochan.multi_file_selector.data.File;
+import com.hochan.multi_file_selector.data.NoneMediaFile;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
 import com.hochan.multi_file_selector.tool.ScreenTools;
+import com.hochan.multi_file_selector.tool.Tool;
 import com.hochan.multi_file_selector.view.SquaredImageView;
 import com.squareup.picasso.Picasso;
 
@@ -35,19 +36,21 @@ public class AudioAdapter extends RecyclerView.Adapter{
             .parse("content://media/external/audio/albumart");
 
     private Context mContext;
-    private List<MediaFile> mMediaFiles = new ArrayList<>();
-    private List<MediaFile> mSelectedAudios = new ArrayList<>();
+    private List<File> mFiles = new ArrayList<>();
+    private List<File> mSelectedAudios = new ArrayList<>();
     private int mAlbumSize;
+    private int mType;
 
     private MediaFileAdapterListener mAdapterListener;
 
-    public AudioAdapter(Context context){
+    public AudioAdapter(Context context, int type){
         this.mContext = context;
+        this.mType = type;
         this.mAlbumSize = ScreenTools.dip2px(context, 50);
     }
 
-    public void setData(List<MediaFile> mMediaFiles){
-        this.mMediaFiles = mMediaFiles;
+    public void setData(List<File> mFiles){
+        this.mFiles = mFiles;
         notifyDataSetChanged();
     }
 
@@ -60,29 +63,30 @@ public class AudioAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         AudioViewHolder audioViewHolder = (AudioViewHolder) holder;
-        AudioFile audioFile = (AudioFile)mMediaFiles.get(position);
-        if(mSelectedAudios.contains(mMediaFiles.get(position))){
-            audioViewHolder.ivMask.setVisibility(View.VISIBLE);
-        }else{
-            audioViewHolder.ivMask.setVisibility(View.GONE);
-        }
-        audioViewHolder.tvName.setText(mMediaFiles.get(position).getmName());
-        //audioViewHolder.tvDuration.setText(String.valueOf(mMediaFiles.get(position).getmDuration()));
-        long duration = audioFile.getmDuration();
-        int minute = (int) (duration/1000/60);
-        int second = (int) (duration/1000%60);
-        audioViewHolder.tvDuration.setText(String.format("%s分%s秒", minute, second));
+        if(mType == File.TYPE_AUDIO) {
+            AudioFile audioFile = (AudioFile) mFiles.get(position);
+            if (mSelectedAudios.contains(audioFile)) {
+                audioViewHolder.ivMask.setVisibility(View.VISIBLE);
+            } else {
+                audioViewHolder.ivMask.setVisibility(View.GONE);
+            }
+            audioViewHolder.tvName.setText(audioFile.getmName());
+            audioViewHolder.tvDuration.setText(Tool.getDurationFormat(audioFile.getmDuration()));
 
-        Picasso.with(mContext)
-                .load(audioFile.getmAlbumUri())
-                .resize(mAlbumSize, mAlbumSize)
-                .centerCrop()
-                .into(audioViewHolder.sivIcon);
+            Picasso.with(mContext)
+                    .load(audioFile.getmAlbumUri())
+                    .resize(mAlbumSize, mAlbumSize)
+                    .centerCrop()
+                    .into(audioViewHolder.sivIcon);
+        }else if(mType == File.TYPE_MEDIANONE){
+            NoneMediaFile noneMediaFile = (NoneMediaFile) mFiles.get(position);
+            audioViewHolder.tvName.setText(noneMediaFile.getmName());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mMediaFiles.size();
+        return mFiles.size();
     }
 
     class AudioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -103,12 +107,12 @@ public class AudioAdapter extends RecyclerView.Adapter{
 
         @Override
         public void onClick(View v) {
-            if(mSelectedAudios.contains(mMediaFiles.get(getPosition()))){
+            if(mSelectedAudios.contains(mFiles.get(getPosition()))){
                 ivMask.setVisibility(View.INVISIBLE);
-                mSelectedAudios.remove(mMediaFiles.get(getPosition()));
+                mSelectedAudios.remove(mFiles.get(getPosition()));
             }else{
                 ivMask.setVisibility(View.VISIBLE);
-                mSelectedAudios.add(mMediaFiles.get(getPosition()));
+                mSelectedAudios.add(mFiles.get(getPosition()));
             }
             mAdapterListener.fileSelected(mSelectedAudios.size());
         }
@@ -142,5 +146,9 @@ public class AudioAdapter extends RecyclerView.Adapter{
 
     public void setmAdapterListener(MediaFileAdapterListener mAdapterListener) {
         this.mAdapterListener = mAdapterListener;
+    }
+
+    public List<File> getmSelectedAudios() {
+        return mSelectedAudios;
     }
 }

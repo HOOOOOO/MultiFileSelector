@@ -45,6 +45,6 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
         android:visibility="invisible"
-        android:src="@drawable/ic_check_circle_white"/>
+        android:src="@drawable/checkbox_unchecked"/>
 
 </LinearLayout>

@@ -5,11 +5,12 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/5/10.
  */
-public class MediaFile {
+public class File {
 
     public final static int TYPE_IMAGE = 0;
     public final static int TYPE_AUDIO = 1;
     public final static int TYPE_VIDEO = 2;
+    public final static int TYPE_MEDIANONE = 3;
 
     public final static ArrayList<String> TYPE_NAME = new ArrayList<>();
 
@@ -17,15 +18,16 @@ public class MediaFile {
         TYPE_NAME.add(TYPE_IMAGE, "图片");
         TYPE_NAME.add(TYPE_AUDIO, "音频");
         TYPE_NAME.add(TYPE_VIDEO, "视频");
+        TYPE_NAME.add(TYPE_MEDIANONE, "文档");
     }
 
     private int mType;
     private String mName;
     private String mPath;
     private String mDataAdded;
-    private String mSize;
+    private long mSize;
 
-    public MediaFile(int mType, String mName, String mPath, String mDataAdded, String mSzie) {
+    public File(int mType, String mName, String mPath, String mDataAdded, long mSzie) {
         this.mType = mType;
         this.mName = mName;
         this.mPath = mPath;
@@ -36,8 +38,8 @@ public class MediaFile {
     @Override
     public boolean equals(Object o){
         try {
-            MediaFile mediaFile = (MediaFile) o;
-            return this.mPath.equals(mediaFile.mPath);
+            File file = (File) o;
+            return this.mPath.equals(file.mPath);
         }catch (ClassCastException e){
             e.printStackTrace();
         }
@@ -68,11 +70,11 @@ public class MediaFile {
         this.mPath = mPath;
     }
 
-    public String getmSize() {
+    public long getmSize() {
         return mSize;
     }
 
-    public void setmSize(String mSize) {
+    public void setmSize(long mSize) {
         this.mSize = mSize;
     }
 

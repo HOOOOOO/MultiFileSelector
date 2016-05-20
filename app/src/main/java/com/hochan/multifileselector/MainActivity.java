@@ -1,7 +1,6 @@
 package com.hochan.multifileselector;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 
 import com.hochan.multi_file_selector.MultiFileSelectorActivity;
 import com.hochan.multi_file_selector.MultiImageSelectorFragment;
-import com.hochan.multi_file_selector.data.MediaFile;
+import com.hochan.multi_file_selector.data.File;
 
 import java.util.ArrayList;
 
@@ -48,14 +47,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.setClass(this, MultiFileSelectorActivity.class);
         switch (v.getId()){
             case R.id.btn_select_image:
-                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, MediaFile.TYPE_IMAGE);
-                startActivityForResult(intent, MediaFile.TYPE_IMAGE);
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_IMAGE);
+                startActivityForResult(intent, File.TYPE_IMAGE);
                 break;
             case R.id.btn_select_audio:
-                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, MediaFile.TYPE_AUDIO);
-                startActivityForResult(intent, MediaFile.TYPE_AUDIO);
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_AUDIO);
+                startActivityForResult(intent, File.TYPE_AUDIO);
                 break;
-
+            case R.id.btn_select_video:
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_VIDEO);
+                startActivityForResult(intent, File.TYPE_VIDEO);
+                break;
+            case R.id.btn_select_text:
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_MEDIANONE);
+                startActivityForResult(intent, File.TYPE_MEDIANONE);
+                break;
         }
     }
 

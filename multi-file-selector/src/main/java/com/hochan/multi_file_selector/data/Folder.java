@@ -1,7 +1,6 @@
 package com.hochan.multi_file_selector.data;
 
 import android.net.Uri;
-import android.provider.MediaStore;
 
 import java.util.List;
 
@@ -12,21 +11,21 @@ public class Folder {
 
     private String mName;
     private String mPath;
-    private List<MediaFile> mMediaFiles;
+    private List<File> mFiles;
     private int mMediaType;
     private Uri mFolderCover;
 
-    public Folder(int mediaType, String mName, String mPath, List<MediaFile> mMediaFiles) {
+    public Folder(int mediaType, String mName, String mPath, List<File> mFiles) {
         this.mMediaType = mediaType;
         this.mName = mName;
         this.mPath = mPath;
-        this.mMediaFiles = mMediaFiles;
+        this.mFiles = mFiles;
         switch (mMediaType){
-            case MediaFile.TYPE_IMAGE:
-                mFolderCover = Uri.parse(mMediaFiles.get(0).getmPath());
+            case File.TYPE_IMAGE:
+                mFolderCover = Uri.fromFile(new java.io.File(mFiles.get(0).getmPath()));
                 break;
-            case MediaFile.TYPE_AUDIO:
-                mFolderCover = ((AudioFile)mMediaFiles.get(0)).getmAlbumUri();
+            case File.TYPE_AUDIO:
+                mFolderCover = ((AudioFile) mFiles.get(0)).getmAlbumUri();
                 break;
         }
     }
@@ -47,12 +46,12 @@ public class Folder {
         this.mPath = mPath;
     }
 
-    public List<MediaFile> getmMediaFiles() {
-        return mMediaFiles;
+    public List<File> getmFiles() {
+        return mFiles;
     }
 
-    public void setmMediaFiles(List<MediaFile> mMediaFiles) {
-        this.mMediaFiles = mMediaFiles;
+    public void setmFiles(List<File> mFiles) {
+        this.mFiles = mFiles;
     }
 
     public Uri getmFolderCover() {

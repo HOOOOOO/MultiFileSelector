@@ -6,7 +6,7 @@ import android.net.Uri;
 /**
  * Created by Administrator on 2016/5/19.
  */
-public class AudioFile extends MediaFile{
+public class AudioFile extends File {
 
     final public static Uri SARTWORKURI = Uri
             .parse("content://media/external/audio/albumart");
@@ -16,7 +16,7 @@ public class AudioFile extends MediaFile{
     private long mDuration;
     private String mArtist;
 
-    public AudioFile(int mType, String mName, String mPath, String mDataAdded, String mSzie) {
+    public AudioFile(int mType, String mName, String mPath, String mDataAdded, long mSzie) {
         super(mType, mName, mPath, mDataAdded, mSzie);
     }
 

@@ -22,9 +22,9 @@ import android.widget.Button;
 import com.hochan.multi_file_selector.adapter.AudioAdapter;
 import com.hochan.multi_file_selector.adapter.FolderAdapter;
 import com.hochan.multi_file_selector.adapter.ImageAdapter;
-import com.hochan.multi_file_selector.data.AudioFile;
+import com.hochan.multi_file_selector.adapter.VideoAdapter;
 import com.hochan.multi_file_selector.data.Folder;
-import com.hochan.multi_file_selector.data.MediaFile;
+import com.hochan.multi_file_selector.data.File;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
 import com.hochan.multi_file_selector.loader.DataLoader;
 import com.hochan.multi_file_selector.tool.ScreenTools;
@@ -47,12 +47,17 @@ public class MultiImageSelectorFragment extends Fragment
     private DataLoader mLoaderCallback = null;
 
     private ImageAdapter mImageAdapter;
-    private static int mImageColumn = 3;
-    private static int mImageGap = 3;
+    private int mImageColumn = 3;
+    private int mImageGap = 3;
 
     private AudioAdapter mAudioAdapter;
+
+    private VideoAdapter mVideoAdapter;
+    private int mVIdeoColumn = 2;
+    private int mVideoGap = 2;
+
     private FolderAdapter mFolderAdapter;
-    private int mCurrentAlbum = 0;
+    private int mCurrentFolder = 0;
     private int mSelectType;
 
     //view
@@ -85,12 +90,12 @@ public class MultiImageSelectorFragment extends Fragment
         btnFolders = (Button) view.findViewById(R.id.btn_folders);
         btnOpera = (Button) view.findViewById(R.id.btn_opera);
 
-        btnOpera.setText("所有"+MediaFile.TYPE_NAME.get(mSelectType));
+        btnFolders.setText("所有"+ File.TYPE_NAME.get(mSelectType));
 
         mFolderAdapter = new FolderAdapter(mContext);
 
         switch (mSelectType){
-            case MediaFile.TYPE_IMAGE:
+            case File.TYPE_IMAGE:
                 btnArtists.setVisibility(View.GONE);
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, mImageColumn);
                 rclvMediaFiles.setLayoutManager(gridLayoutManager);
@@ -110,16 +115,30 @@ public class MultiImageSelectorFragment extends Fragment
                     }
                 });
                 break;
-            case MediaFile.TYPE_AUDIO:
+            case File.TYPE_AUDIO:
                 btnArtists.setVisibility(View.VISIBLE);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
                 rclvMediaFiles.setLayoutManager(linearLayoutManager);
 
-                mAudioAdapter = new AudioAdapter(mContext);
+                mAudioAdapter = new AudioAdapter(mContext, File.TYPE_AUDIO);
                 mAudioAdapter.setmAdapterListener(this);
                 rclvMediaFiles.setAdapter(mAudioAdapter);
                 break;
-            case MediaFile.TYPE_VIDEO:
+            case File.TYPE_VIDEO:
+                btnArtists.setVisibility(View.GONE);
+                GridLayoutManager bgridLayoutManager = new GridLayoutManager(mContext, mVIdeoColumn);
+                rclvMediaFiles.setLayoutManager(bgridLayoutManager);
+                mVideoAdapter = new VideoAdapter(mContext);
+                mVideoAdapter.setmAdapterListener(this);
+                rclvMediaFiles.setAdapter(mVideoAdapter);
+                break;
+            case File.TYPE_MEDIANONE:
+                btnArtists.setVisibility(View.GONE);
+                LinearLayoutManager blinearLayoutManager = new LinearLayoutManager(mContext);
+                rclvMediaFiles.setLayoutManager(blinearLayoutManager);
+
+                mAudioAdapter = new AudioAdapter(mContext, File.TYPE_MEDIANONE);
+                rclvMediaFiles.setAdapter(mAudioAdapter);
                 break;
         }
 
@@ -132,7 +151,7 @@ public class MultiImageSelectorFragment extends Fragment
                     mFolderPopupWindow.dismiss();
                 }else{
                     mFolderPopupWindow.show();
-                    int index = mCurrentAlbum == 0 ? 0 : mCurrentAlbum-1;
+                    int index = mCurrentFolder == 0 ? 0 : mCurrentFolder -1;
                     mFolderPopupWindow.getListView().setSelection(index);
                 }
             }
@@ -175,29 +194,48 @@ public class MultiImageSelectorFragment extends Fragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mFolderPopupWindow.dismiss();
-                mImageAdapter.setData((mFolderAdapter.getItem(position)).getmMediaFiles());
-                mCurrentAlbum = position;
+                switch (mSelectType){
+                    case File.TYPE_IMAGE:
+                        mImageAdapter.setData((mFolderAdapter.getItem(position)).getmFiles());
+                        break;
+                    case File.TYPE_AUDIO:
+                        mAudioAdapter.setData(mFolderAdapter.getItem(position).getmFiles());
+                        break;
+                }
+                mCurrentFolder = position;
                 btnFolders.setText(mFolderAdapter.getItem(position).getmName());
             }
         });
     }
 
     @Override
-    public void finish(List<MediaFile> mediaFiles, List<Folder> folders) {
+    public void finish(List<File> files, List<Folder> folders) {
         switch (mSelectType) {
-            case MediaFile.TYPE_IMAGE:
-                mImageAdapter.setData((ArrayList<MediaFile>) mediaFiles);
-                Folder folder = new Folder(MediaFile.TYPE_IMAGE, "所有图片", null, mediaFiles);
+            case File.TYPE_IMAGE:
+                mImageAdapter.setData((ArrayList<File>) files);
+                Folder folder = new Folder(File.TYPE_IMAGE, "所有图片", null, files);
                 folders.add(0, folder);
                 mFolderAdapter.setData(folders);
-                System.out.println(mediaFiles.size());
+                System.out.println(files.size());
                 break;
-            case MediaFile.TYPE_AUDIO:
-                mAudioAdapter.setData(mediaFiles);
-                Folder audioFolder = new Folder(MediaFile.TYPE_AUDIO, "所有音乐", null, mediaFiles);
+            case File.TYPE_AUDIO:
+                mAudioAdapter.setData(files);
+                Folder audioFolder = new Folder(File.TYPE_AUDIO, "所有音乐", null, files);
                 folders.add(0, audioFolder);
                 mFolderAdapter.setData(folders);
-                System.out.println(mediaFiles.size());
+                System.out.println(files.size());
+                break;
+            case File.TYPE_VIDEO:
+                mVideoAdapter.setData(files);
+                Folder videoFolder = new Folder(File.TYPE_VIDEO, "所有视频", null, files);
+                folders.add(0, videoFolder);
+                mFolderAdapter.setData(folders);
+                break;
+            case File.TYPE_MEDIANONE:
+                mAudioAdapter.setData(files);
+                Folder noneMediaFolder = new Folder(File.TYPE_VIDEO, "所有文档", null, files);
+                folders.add(0, noneMediaFolder);
+                mFolderAdapter.setData(folders);
                 break;
             default:
                 System.out.println("mSelectType:"+mSelectType);
@@ -214,17 +252,36 @@ public class MultiImageSelectorFragment extends Fragment
     }
 
     private void sendBackImages(){
-        if(mImageAdapter.getSelectedImages().size() == 0)
-            getActivity().finish();
-        else{
-            ArrayList<String> resultList = new ArrayList<>();
-            for(MediaFile mediaFile : mImageAdapter.getSelectedImages()){
-                resultList.add(mediaFile.getmPath());
-            }
-            Intent data = new Intent();
-            data.putStringArrayListExtra(EXTRA_RESULT, resultList);
-            getActivity().setResult(Activity.RESULT_OK, data);
-            getActivity().finish();
+        ArrayList<String> resultList = new ArrayList<>();
+        switch (mSelectType){
+            case File.TYPE_IMAGE:
+                if(mImageAdapter.getSelectedImages().size() == 0)
+                    getActivity().finish();
+                else{
+                    for(File file : mImageAdapter.getSelectedImages())
+                        resultList.add(file.getmPath());
+                }
+                break;
+            case File.TYPE_AUDIO:
+                if(mAudioAdapter.getmSelectedAudios().size() == 0)
+                    getActivity().finish();
+                else{
+                    for(File file : mAudioAdapter.getmSelectedAudios())
+                        resultList.add(file.getmPath());
+                }
+                break;
+            case File.TYPE_VIDEO:
+                if(mVideoAdapter.getmSelectedVideos().size() == 0)
+                    getActivity().finish();
+                else{
+                    for(File file : mVideoAdapter.getmSelectedVideos())
+                        resultList.add(file.getmPath());
+                }
+                break;
         }
+        Intent data = new Intent();
+        data.putStringArrayListExtra(EXTRA_RESULT, resultList);
+        getActivity().setResult(Activity.RESULT_OK, data);
+        getActivity().finish();
     }
 }

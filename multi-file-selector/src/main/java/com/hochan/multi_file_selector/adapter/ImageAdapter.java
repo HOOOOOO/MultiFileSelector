@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 import com.hochan.multi_file_selector.MultiImageSelectorFragment;
 import com.hochan.multi_file_selector.R;
 import com.hochan.multi_file_selector.data.ImageFile;
-import com.hochan.multi_file_selector.data.MediaFile;
+import com.hochan.multi_file_selector.data.File;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
 import com.hochan.multi_file_selector.tool.ScreenTools;
 import com.hochan.multi_file_selector.view.SquaredImageView;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +23,8 @@ import java.util.List;
  */
 public class ImageAdapter extends RecyclerView.Adapter{
 
-    private ArrayList<MediaFile> mImageFiles = new ArrayList<>();
-    private ArrayList<MediaFile> mSelectedImages = new ArrayList<>();
+    private ArrayList<File> mImageFiles = new ArrayList<>();
+    private ArrayList<File> mSelectedImages = new ArrayList<>();
     private Context mContext;
 
     private final int mGridWidth;
@@ -35,12 +34,12 @@ public class ImageAdapter extends RecyclerView.Adapter{
         this.mGridWidth = ScreenTools.getScreenWidth(context)/column;
     }
 
-    public void setData(List<MediaFile> images){
-        mImageFiles = (ArrayList<MediaFile>) images;
+    public void setData(List<File> images){
+        mImageFiles = (ArrayList<File>) images;
         notifyDataSetChanged();
     }
 
-    public List<MediaFile> getSelectedImages(){
+    public List<File> getSelectedImages(){
         return mSelectedImages;
     }
 
@@ -60,7 +59,7 @@ public class ImageAdapter extends RecyclerView.Adapter{
         }else{
             imageViewHolder.sivMask.setVisibility(View.GONE);
         }
-        File image = new File(mImageFiles.get(position).getmPath());
+        java.io.File image = new java.io.File(mImageFiles.get(position).getmPath());
         if(image.exists()) {
             Picasso.with(mContext)
                     .load(image)
