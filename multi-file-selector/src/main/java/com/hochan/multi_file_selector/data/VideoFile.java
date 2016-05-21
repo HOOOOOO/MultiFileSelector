@@ -9,6 +9,7 @@ public class VideoFile extends File {
 
     private long mDuration;
     private Uri mCoverUri;
+    private String mThumbnailPath;
 
     public VideoFile(int mType, String mName, String mPath, String mDataAdded, long mSzie) {
         super(mType, mName, mPath, mDataAdded, mSzie);
@@ -28,5 +29,13 @@ public class VideoFile extends File {
 
     public void setmCoverUri(Uri mCoverUri) {
         this.mCoverUri = mCoverUri;
+    }
+
+    public String getmThumbnailPath() {
+        return mThumbnailPath;
+    }
+
+    public void setmThumbnailPath(String mThumbnailPath) {
+        this.mThumbnailPath = mThumbnailPath;
     }
 }

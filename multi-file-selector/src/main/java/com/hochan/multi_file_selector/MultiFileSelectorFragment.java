@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.hochan.multi_file_selector.adapter.LinearAdapter;
 import com.hochan.multi_file_selector.adapter.FolderAdapter;
@@ -32,6 +33,7 @@ import com.hochan.multi_file_selector.loader.DataLoader;
 import com.hochan.multi_file_selector.tool.ScreenTools;
 import com.hochan.multi_file_selector.view.RecycleViewDivider;
 import com.squareup.picasso.Picasso;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +68,7 @@ public class MultiFileSelectorFragment extends Fragment
     private RecyclerView rclvMediaFiles;
     private Button btnOpera, btnArtists;
     private ListPopupWindow mFolderPopupWindow;
-
+    private AVLoadingIndicatorView mProgressBar;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +96,7 @@ public class MultiFileSelectorFragment extends Fragment
         btnOpera.setText("取消");
 
         mFolderAdapter = new FolderAdapter(mContext);
+        mProgressBar = (AVLoadingIndicatorView) view.findViewById(R.id.avloadingIndicatorView);
 
         switch (mSelectType){
             case File.TYPE_IMAGE:
@@ -181,6 +184,8 @@ public class MultiFileSelectorFragment extends Fragment
                         mImageAdapter.setData((mFolderAdapter.getItem(position)).getmFiles());
                         break;
                     case File.TYPE_AUDIO:
+                    case File.TYPE_MEDIANONE:
+                    case File.TYPE_VIDEO:
                         mLinearAdapter.setData(mFolderAdapter.getItem(position).getmFiles());
                         break;
                 }
@@ -216,7 +221,7 @@ public class MultiFileSelectorFragment extends Fragment
                 break;
             case File.TYPE_MEDIANONE:
                 mLinearAdapter.setData(files);
-                Folder noneMediaFolder = new Folder(File.TYPE_VIDEO, "所有文档", null, files);
+                Folder noneMediaFolder = new Folder(File.TYPE_MEDIANONE, "所有文档", null, files);
                 folders.add(0, noneMediaFolder);
                 mFolderAdapter.setData(folders);
                 break;
@@ -224,6 +229,7 @@ public class MultiFileSelectorFragment extends Fragment
                 System.out.println("mSelectType:"+mSelectType);
                 break;
         }
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

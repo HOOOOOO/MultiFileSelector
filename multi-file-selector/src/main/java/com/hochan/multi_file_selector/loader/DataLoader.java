@@ -80,12 +80,8 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        System.out.println("dataloder:"+id);
         switch (id){
             case File.TYPE_IMAGE:
-                System.out.println(IMAGE_PROJECTION_LIST.get(3));
-                System.out.println(IMAGE_PROJECTION_LIST.get(4));
-                System.out.println(IMAGE_PROJECTION_LIST.get(2));
                 CursorLoader acursorLoader = new CursorLoader(mContext,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         (String[]) IMAGE_PROJECTION_LIST.toArray(new String[IMAGE_PROJECTION_LIST.size()]),
@@ -165,6 +161,7 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                         long size = data.getLong(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.SIZE));
                         NoneMediaFile noneMediaFile = new NoneMediaFile(type, name, path, dateAdded, size);
                         mFiles.add(noneMediaFile);
+                        addToFolder(noneMediaFile);
                         continue;
                     }
 
@@ -197,12 +194,35 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                             VideoFile videoFile = new VideoFile(File.TYPE_VIDEO,
                                     displayName, path, dateAdded, size);
                             videoFile.setmDuration(data.getLong(data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(6))));
+
+                            long videoID = data.getLong(
+                                    data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(5)));
+                            //System.out.println(videoID);
+
+                            MediaStore.Video.Thumbnails.getThumbnail(mContext.getContentResolver(),
+                                    videoID, MediaStore.Video.Thumbnails.MICRO_KIND, null);
+
+                            Cursor cursor = mContext.getContentResolver().query(MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
+                                    null, MediaStore.Video.Thumbnails.VIDEO_ID + " =? ", new String[]{String.valueOf(videoID)}, null);
+                            try{
+                                if(cursor.moveToFirst()){
+                                    String thumbnail = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA));
+                                    //System.out.println(thumbnail);
+                                    videoFile.setmThumbnailPath(thumbnail);
+                                }else {
+                                    System.out.println("结果为空");
+                                }
+                            }finally {
+                                cursor.close();
+                            }
+
                             mFiles.add(videoFile);
                             addToFolder(videoFile);
                             break;
                     }
 
                 } while (data.moveToNext());
+
                 if (mCallBack != null) {
                     System.out.println(mFiles.size());
                     mCallBack.finish(mFiles, mFolders);

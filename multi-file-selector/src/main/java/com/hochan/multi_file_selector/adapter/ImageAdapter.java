@@ -1,6 +1,7 @@
 package com.hochan.multi_file_selector.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,6 +96,8 @@ public class ImageAdapter extends RecyclerView.Adapter{
             }else {
                 mSelectedImages.add(mImageFiles.get(getPosition()));
                 sivMask.setVisibility(View.VISIBLE);
+
+                //sivMask.setImageTintList(ColorStateList.valueOf(mContext.getResources().getColor()));
             }
             System.out.println("已选图片数目："+mSelectedImages.size());
             if(mAdapaterListener != null){

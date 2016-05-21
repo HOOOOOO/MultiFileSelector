@@ -65,7 +65,7 @@ public class FolderAdapter extends BaseAdapter{
         }else{
             folderViewHolder = (FolderViewHolder) convertView.getTag();
         }
-        folderViewHolder.tvName.setText(getItem(position).getmName());
+        folderViewHolder.tvName.setText(getItem(position).getmName()+"("+folder.getmFiles().size()+")");
         if(getItem(position).getmPath() == null)
             folderViewHolder.tvPath.setVisibility(View.GONE);
         else {
@@ -86,6 +86,14 @@ public class FolderAdapter extends BaseAdapter{
                 Picasso.with(mContext)
                         .load(mFolders.get(position).getmFolderCover())
                         .placeholder(R.drawable.icon_list_large_image_no_shadow)
+                        .resize(mFolderIconSize, mFolderIconSize)
+                        .centerCrop()
+                        .into(folderViewHolder.sivIcon);
+                break;
+            case File.TYPE_VIDEO:
+                Picasso.with(mContext)
+                        .load(mFolders.get(position).getmFolderCover())
+                        .placeholder(R.drawable.icon_list_videofile)
                         .resize(mFolderIconSize, mFolderIconSize)
                         .centerCrop()
                         .into(folderViewHolder.sivIcon);

@@ -5,9 +5,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import com.hochan.multi_file_selector.data.File;
 import com.hochan.multi_file_selector.data.NoneMediaFile;
 import com.hochan.multi_file_selector.data.VideoFile;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
+import com.hochan.multi_file_selector.tool.GetVideoThumbnail;
 import com.hochan.multi_file_selector.tool.ScreenTools;
 import com.hochan.multi_file_selector.tool.Tool;
 import com.hochan.multi_file_selector.view.SquaredImageView;
@@ -63,7 +67,7 @@ public class LinearAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        LinearViewHolder viewHolder = (LinearViewHolder) holder;
+        final LinearViewHolder viewHolder = (LinearViewHolder) holder;
         if(mType == File.TYPE_AUDIO) {
             AudioFile audioFile = (AudioFile) mFiles.get(position);
             if (mSelectedFiles.contains(audioFile)) {
@@ -115,12 +119,21 @@ public class LinearAdapter extends RecyclerView.Adapter{
             viewHolder.tvName.setText(videoFile.getmName());
             viewHolder.tvDuration.setText(Tool.getDurationFormat(videoFile.getmDuration()));
 
-            Picasso.with(mContext)
-                    .load("dsads")
-                    .placeholder(R.drawable.icon_list_videofile)
-                    .resize(mAlbumSize, mAlbumSize)
-                    .centerCrop()
-                    .into(viewHolder.sivIcon);
+            String thumbnail = videoFile.getmThumbnailPath();
+            if(!TextUtils.isEmpty(thumbnail)) {
+                java.io.File file = new java.io.File(thumbnail);
+                Picasso.with(mContext)
+                        .load(file)
+                        .placeholder(R.drawable.icon_list_videofile)
+                        .into(viewHolder.sivIcon);
+                //System.out.println("缩略图不为空："+videoFile.getmPath()+" "+thumbnail);
+            }else{
+                System.out.println("图片为空："+videoFile.getmPath());
+                viewHolder.sivIcon.setImageResource(R.drawable.icon_list_videofile);
+                viewHolder.sivIcon.setTag(videoFile.getmPath());
+                GetVideoThumbnail getVideoThumbnail = new GetVideoThumbnail(viewHolder.sivIcon, videoFile.getmPath());
+                //getVideoThumbnail.execute(videoFile.getmPath());
+            }
         }
     }
 
