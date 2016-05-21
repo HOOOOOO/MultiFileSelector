@@ -45,6 +45,12 @@ public class MultiFileSelectorActivity extends AppCompatActivity {
             case File.TYPE_MEDIANONE:
                 mToolbar.setTitle("选择文档");
                 bundle.putInt(TYPE_SELECT, File.TYPE_MEDIANONE);
+                break;
+            case File.TYPE_ALL:
+                mToolbar.setTitle("选择文件");
+                bundle.putInt(TYPE_SELECT, File.TYPE_ALL);
+                btnFolders.setVisibility(View.GONE);
+                break;
         }
 
         mFragment = (MultiFileSelectorFragment) Fragment.instantiate(this,

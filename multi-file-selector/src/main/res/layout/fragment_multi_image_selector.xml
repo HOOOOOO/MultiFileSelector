@@ -23,12 +23,28 @@
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:background="@drawable/shape_shadow"/>
+
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/ll_folder"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+            </LinearLayout>
+        </HorizontalScrollView>
+
         <Button
             android:id="@+id/btn_artists"
             android:text="所有歌手"
             android:visibility="gone"
             style="@style/DefaultButtonStyle"
             android:layout_weight="1"/>
+
         <Button
             android:id="@+id/btn_opera"
             android:layout_width="match_parent"
@@ -40,6 +56,7 @@
             android:layout_marginRight="10dp"
             android:textColor="?attr/colorPrimary"
             android:layout_weight="1"/>
+
     </LinearLayout>
 
     <com.wang.avi.AVLoadingIndicatorView

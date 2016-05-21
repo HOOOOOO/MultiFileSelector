@@ -140,7 +140,7 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
                         String mimeType = data.getString(
                                 data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MIME_TYPE));
-                        System.out.println(mimeType);
+                        //System.out.println(mimeType);
                         int type = NoneMediaFile.TYPE_PDF;
                         switch (mimeType){
                             case "application/pdf":

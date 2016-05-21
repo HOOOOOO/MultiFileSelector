@@ -19,7 +19,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Toolbar mToolbar;
-    private ImageButton btnSelectImage, btnSelectAudio, btnSelectVideo, btnSelectText;
+    private ImageButton btnSelectImage, btnSelectAudio, btnSelectVideo,
+            btnSelectText, btnSelectAll;
     private TextView tvResult;
 
     @Override
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSelectVideo.setOnClickListener(this);
         btnSelectText = (ImageButton) findViewById(R.id.btn_select_text);
         btnSelectText.setOnClickListener(this);
+        btnSelectAll = (ImageButton) findViewById(R.id.btn_select_all);
+        btnSelectAll.setOnClickListener(this);
 
         tvResult = (TextView) findViewById(R.id.tv_result);
     }
@@ -58,11 +61,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_select_video:
                 intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_VIDEO);
-                startActivityForResult(intent, File.TYPE_VIDEO);
+                //startActivityForResult(intent, File.TYPE_VIDEO);
                 break;
             case R.id.btn_select_text:
                 intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_MEDIANONE);
                 startActivityForResult(intent, File.TYPE_MEDIANONE);
+                break;
+            case R.id.btn_select_all:
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_ALL);
+                startActivityForResult(intent, File.TYPE_ALL);
                 break;
         }
     }

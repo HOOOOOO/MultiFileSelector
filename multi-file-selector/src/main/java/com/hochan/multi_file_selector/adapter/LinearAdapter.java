@@ -5,10 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -61,7 +59,7 @@ public class LinearAdapter extends RecyclerView.Adapter{
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_audio_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_linear_item, parent, false);
         return new LinearViewHolder(view);
     }
 
@@ -153,7 +151,7 @@ public class LinearAdapter extends RecyclerView.Adapter{
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
             tvDuration = (TextView) itemView.findViewById(R.id.tv_duration);
             sivIcon = (SquaredImageView) itemView.findViewById(R.id.siv_icon);
-            ivCheck = (ImageView) itemView.findViewById(R.id.iv_mask);
+            ivCheck = (ImageView) itemView.findViewById(R.id.iv_check);
 
             itemView.setOnClickListener(this);
         }

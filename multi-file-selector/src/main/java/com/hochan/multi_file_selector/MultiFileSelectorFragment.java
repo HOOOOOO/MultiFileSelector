@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.hochan.multi_file_selector.adapter.AllFileAdapter;
 import com.hochan.multi_file_selector.adapter.LinearAdapter;
 import com.hochan.multi_file_selector.adapter.FolderAdapter;
 import com.hochan.multi_file_selector.adapter.ImageAdapter;
@@ -60,6 +63,8 @@ public class MultiFileSelectorFragment extends Fragment
     private int mVIdeoColumn = 2;
     private int mVideoGap = 2;
 
+    private AllFileAdapter mAllFileAdapter;
+
     private FolderAdapter mFolderAdapter;
     private int mCurrentFolder = 0;
     private int mSelectType;
@@ -69,6 +74,8 @@ public class MultiFileSelectorFragment extends Fragment
     private Button btnOpera, btnArtists;
     private ListPopupWindow mFolderPopupWindow;
     private AVLoadingIndicatorView mProgressBar;
+    private LinearLayout llFolder;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +104,7 @@ public class MultiFileSelectorFragment extends Fragment
 
         mFolderAdapter = new FolderAdapter(mContext);
         mProgressBar = (AVLoadingIndicatorView) view.findViewById(R.id.avloadingIndicatorView);
+        llFolder = (LinearLayout) view.findViewById(R.id.ll_folder);
 
         switch (mSelectType){
             case File.TYPE_IMAGE:
@@ -131,6 +139,18 @@ public class MultiFileSelectorFragment extends Fragment
                 mLinearAdapter = new LinearAdapter(mContext, File.TYPE_VIDEO);
                 initRecyclerView();
                 break;
+            case File.TYPE_ALL:
+                llFolder.setVisibility(View.VISIBLE);
+                mAllFileAdapter = new AllFileAdapter(mContext);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+                rclvMediaFiles.setPadding(0, 0, 0, 0);
+                rclvMediaFiles.addItemDecoration(new RecycleViewDivider(mContext,
+                        LinearLayout.HORIZONTAL, 1, getResources().getColor(R.color.colorDivider)));
+                rclvMediaFiles.setLayoutManager(linearLayoutManager);
+                rclvMediaFiles.setAdapter(mAllFileAdapter);
+                mAllFileAdapter.setmAdapterListener(this);
+                mProgressBar.setVisibility(View.INVISIBLE);
+                break;
         }
 
         btnOpera.setOnClickListener(new View.OnClickListener() {
@@ -159,10 +179,12 @@ public class MultiFileSelectorFragment extends Fragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mLoaderCallback = new DataLoader(getActivity(), mSelectType);
-        mLoaderCallback.setCallBack(this);
-        getActivity().getSupportLoaderManager().initLoader(
-                mSelectType, null, mLoaderCallback);
+        if(mSelectType != File.TYPE_ALL) {
+            mLoaderCallback = new DataLoader(getActivity(), mSelectType);
+            mLoaderCallback.setCallBack(this);
+            getActivity().getSupportLoaderManager().initLoader(
+                    mSelectType, null, mLoaderCallback);
+        }
     }
 
     private void createFolderPopupWindow(){
@@ -240,6 +262,22 @@ public class MultiFileSelectorFragment extends Fragment
             btnOpera.setText("取消");
     }
 
+    @Override
+    public void recordFolder(final java.io.File file) {
+        final TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.textview_record_folder, null, false);
+        textView.setText(file.getName());
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAllFileAdapter.updateFolder(file);
+                int index = llFolder.indexOfChild(textView);
+                for(int i = index+1; i <= llFolder.getChildCount(); i++)
+                    llFolder.removeView(llFolder.getChildAt(i));
+            }
+        });
+        llFolder.addView(textView);
+    }
+
     private void sendBackImages(){
         ArrayList<String> resultList = new ArrayList<>();
         switch (mSelectType){
@@ -261,6 +299,14 @@ public class MultiFileSelectorFragment extends Fragment
                         resultList.add(file.getmPath());
                 }
                 break;
+            case File.TYPE_ALL:
+                if(mAllFileAdapter.getmSelectedFiled().size() == 0)
+                    getActivity().finish();
+                else{
+                    for(java.io.File file : mAllFileAdapter.getmSelectedFiled())
+                        resultList.add(file.getAbsolutePath());
+                }
+                break;
         }
         Intent data = new Intent();
         data.putStringArrayListExtra(EXTRA_RESULT, resultList);
@@ -280,4 +326,6 @@ public class MultiFileSelectorFragment extends Fragment
             mFolderPopupWindow.getListView().setSelection(index);
         }
     }
+
+
 }

@@ -11,6 +11,7 @@ public class File {
     public final static int TYPE_AUDIO = 1;
     public final static int TYPE_VIDEO = 2;
     public final static int TYPE_MEDIANONE = 3;
+    public final static int TYPE_ALL = 4;
 
     public final static ArrayList<String> TYPE_NAME = new ArrayList<>();
 
@@ -19,6 +20,7 @@ public class File {
         TYPE_NAME.add(TYPE_AUDIO, "音频");
         TYPE_NAME.add(TYPE_VIDEO, "视频");
         TYPE_NAME.add(TYPE_MEDIANONE, "文档");
+        TYPE_NAME.add(TYPE_ALL, "文件");
     }
 
     private int mType;
