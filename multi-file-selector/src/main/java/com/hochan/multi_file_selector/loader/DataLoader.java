@@ -16,14 +16,16 @@ import android.webkit.MimeTypeMap;
 import com.hochan.multi_file_selector.data.AudioFile;
 import com.hochan.multi_file_selector.data.Folder;
 import com.hochan.multi_file_selector.data.ImageFile;
-import com.hochan.multi_file_selector.data.File;
+import com.hochan.multi_file_selector.data.BaseFile;
 import com.hochan.multi_file_selector.data.NoneMediaFile;
 import com.hochan.multi_file_selector.data.VideoFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by Administrator on 2016/5/7.
  */
 public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -61,15 +63,15 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
         VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media._ID);            //5
         VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DURATION);       //6
 
-        MEDIA_PROJECTION_LIST.add(File.TYPE_IMAGE, IMAGE_PROJECTION_LIST);
-        MEDIA_PROJECTION_LIST.add(File.TYPE_AUDIO, AUDIO_PROJECTION_LIST);
-        MEDIA_PROJECTION_LIST.add(File.TYPE_VIDEO, VIDEO_PROJECTION_LIST);
+        MEDIA_PROJECTION_LIST.add(BaseFile.TYPE_IMAGE, IMAGE_PROJECTION_LIST);
+        MEDIA_PROJECTION_LIST.add(BaseFile.TYPE_AUDIO, AUDIO_PROJECTION_LIST);
+        MEDIA_PROJECTION_LIST.add(BaseFile.TYPE_VIDEO, VIDEO_PROJECTION_LIST);
     }
 
     private Context mContext;
     private int mType;
     private List<Folder> mFolders;
-    private List<File> mFiles;
+    private List<BaseFile> mBaseFiles;
 
     public DataLoader(Context context, int type){
         this.mContext = context;
@@ -81,7 +83,7 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id){
-            case File.TYPE_IMAGE:
+            case BaseFile.TYPE_IMAGE:
                 CursorLoader acursorLoader = new CursorLoader(mContext,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         (String[]) IMAGE_PROJECTION_LIST.toArray(new String[IMAGE_PROJECTION_LIST.size()]),
@@ -90,21 +92,21 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                         new String[]{"image/jpeg", "image/png"},
                         IMAGE_PROJECTION_LIST.get(2) + " DESC");
                 return acursorLoader;
-            case File.TYPE_VIDEO:
+            case BaseFile.TYPE_VIDEO:
                 CursorLoader bcursorLoader = new CursorLoader(mContext,
                         MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                         (String[]) VIDEO_PROJECTION_LIST.toArray(new String[IMAGE_PROJECTION_LIST.size()]),
                         VIDEO_PROJECTION_LIST.get(3)+">0 ",
                         null, VIDEO_PROJECTION_LIST.get(2)+" DESC");
                 return bcursorLoader;
-            case File.TYPE_AUDIO:
+            case BaseFile.TYPE_AUDIO:
                 CursorLoader ccursorLoader = new CursorLoader(mContext,
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         (String[]) AUDIO_PROJECTION_LIST.toArray(new String[AUDIO_PROJECTION_LIST.size()]),
                         AUDIO_PROJECTION_LIST.get(3)+">0 ",
                         null, AUDIO_PROJECTION_LIST.get(2)+" DESC");
                 return ccursorLoader;
-            case File.TYPE_MEDIANONE:
+            case BaseFile.TYPE_MEDIANONE:
                 ContentResolver cr = mContext.getContentResolver();
                 Uri uri = MediaStore.Files.getContentUri("external");
                 String[] projection = null;
@@ -133,10 +135,10 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                 System.out.println("corsur不为空:"+data.getCount());
                 data.moveToFirst();
                 mFolders = new ArrayList<>();
-                mFiles = new ArrayList<>(data.getCount());
+                mBaseFiles = new ArrayList<>(data.getCount());
                 do {
 
-                    if(mType == File.TYPE_MEDIANONE){
+                    if(mType == BaseFile.TYPE_MEDIANONE){
 
                         String mimeType = data.getString(
                                 data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MIME_TYPE));
@@ -156,42 +158,49 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
                         String path = data.getString(
                                 data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA));
+	                    if(path == null){
+		                    continue;
+	                    }
                         String name = path.substring(path.lastIndexOf("/")+1, path.length());
                         String dateAdded = data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATE_ADDED));
                         long size = data.getLong(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.SIZE));
                         NoneMediaFile noneMediaFile = new NoneMediaFile(type, name, path, dateAdded, size);
-                        mFiles.add(noneMediaFile);
+                        mBaseFiles.add(noneMediaFile);
                         addToFolder(noneMediaFile);
                         continue;
                     }
 
+	                String path = data.getString(
+			                data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(0)));
+	                System.out.println("----------------"+path);
+	                if(path == null) {
+		                continue;
+	                }
                     String displayName = data.getString(
                             data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(1)));
-                    String path = data.getString(
-                            data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(0)));
                     String dateAdded = data.getString(
                             data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(2)));
                     long size = data.getLong(
                             data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(3)));
 
                     switch (mType) {
-                        case File.TYPE_IMAGE:
-                            ImageFile imageFile = new ImageFile(File.TYPE_IMAGE,
+                        case BaseFile.TYPE_IMAGE:
+                            ImageFile imageFile = new ImageFile(BaseFile.TYPE_IMAGE,
                                     displayName, path, dateAdded, size);
-                            mFiles.add(imageFile);
+                            mBaseFiles.add(imageFile);
                             addToFolder(imageFile);
                             break;
-                        case File.TYPE_AUDIO:
-                            AudioFile audioFile = new AudioFile(File.TYPE_AUDIO,
+                        case BaseFile.TYPE_AUDIO:
+                            AudioFile audioFile = new AudioFile(BaseFile.TYPE_AUDIO,
                                     displayName, path, dateAdded, size);
                             audioFile.setmDuration(
                                     data.getLong(data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(7))));
                             audioFile.setmAlbumId(data.getLong(data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(8))));
-                            mFiles.add(audioFile);
+                            mBaseFiles.add(audioFile);
                             addToFolder(audioFile);
                             break;
-                        case File.TYPE_VIDEO:
-                            VideoFile videoFile = new VideoFile(File.TYPE_VIDEO,
+                        case BaseFile.TYPE_VIDEO:
+                            VideoFile videoFile = new VideoFile(BaseFile.TYPE_VIDEO,
                                     displayName, path, dateAdded, size);
                             videoFile.setmDuration(data.getLong(data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(6))));
 
@@ -216,7 +225,7 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                                 cursor.close();
                             }
 
-                            mFiles.add(videoFile);
+                            mBaseFiles.add(videoFile);
                             addToFolder(videoFile);
                             break;
                     }
@@ -224,8 +233,8 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                 } while (data.moveToNext());
 
                 if (mCallBack != null) {
-                    System.out.println(mFiles.size());
-                    mCallBack.finish(mFiles, mFolders);
+                    System.out.println(mBaseFiles.size());
+                    mCallBack.finish(mBaseFiles, mFolders);
                 }
             } else {
                 System.out.println("查询结果为空" + data.getCount());
@@ -235,21 +244,19 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
-    private void addToFolder(File file){
-        java.io.File folderFile = new java.io.File(file.getmPath()).getParentFile();
+    private void addToFolder(BaseFile baseFile){
+        File folderFile = new File(baseFile.getPath()).getParentFile();
         if (folderFile.exists()) {
-            if (folderFile != null && folderFile.exists()) {
-                Folder tmpFolder = getFolderByPath(folderFile.getAbsolutePath());
-                if (tmpFolder == null) {
-                    List<File> files = new ArrayList<>();
-                    files.add(file);
-                    Folder folder = new Folder(mType,
-                            folderFile.getName(), folderFile.getAbsolutePath(), files);
-                    mFolders.add(folder);
-                } else {
-                    tmpFolder.getmFiles().add(file);
-                }
-            }
+	        Folder tmpFolder = getFolderByPath(folderFile.getAbsolutePath());
+	        if (tmpFolder == null) {
+		        List<BaseFile> baseFiles = new ArrayList<>();
+		        baseFiles.add(baseFile);
+		        Folder folder = new Folder(mType,
+				        folderFile.getName(), folderFile.getAbsolutePath(), baseFiles);
+		        mFolders.add(folder);
+	        } else {
+		        tmpFolder.getmFiles().add(baseFile);
+	        }
         }
     }
 
@@ -267,7 +274,7 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     public interface DataLoaderCallBack{
-        public void finish(List<File> files, List<Folder> folders);
+        public void finish(List<BaseFile> baseFiles, List<Folder> folders);
     }
 
     private DataLoaderCallBack mCallBack;

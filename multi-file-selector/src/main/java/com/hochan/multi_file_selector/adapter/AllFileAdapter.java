@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by Administrator on 2016/5/21.
  */
 public class AllFileAdapter extends RecyclerView.Adapter{
@@ -27,8 +28,6 @@ public class AllFileAdapter extends RecyclerView.Adapter{
     private MediaFileAdapterListener mAdapterListener;
 
     public AllFileAdapter(Context context){
-        //File file = new File("/");
-        //mFiles = file.listFiles();
         System.out.println(mFiles.length);
         this.mContext = context;
     }

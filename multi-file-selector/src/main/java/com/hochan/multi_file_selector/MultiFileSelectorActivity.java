@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import com.hochan.multi_file_selector.data.File;
+import com.hochan.multi_file_selector.data.BaseFile;
 
 public class MultiFileSelectorActivity extends AppCompatActivity {
 
@@ -30,25 +30,25 @@ public class MultiFileSelectorActivity extends AppCompatActivity {
         btnFolders = (Button) findViewById(R.id.btn_folders);
         Bundle bundle = new Bundle();
         switch (mSelectType){
-            case File.TYPE_IMAGE:
+            case BaseFile.TYPE_IMAGE:
                 mToolbar.setTitle("选择图片");
-                bundle.putInt(TYPE_SELECT, File.TYPE_IMAGE);
+                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_IMAGE);
                 break;
-            case File.TYPE_AUDIO:
+            case BaseFile.TYPE_AUDIO:
                 mToolbar.setTitle("选择音乐");
-                bundle.putInt(TYPE_SELECT, File.TYPE_AUDIO);
+                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_AUDIO);
                 break;
-            case File.TYPE_VIDEO:
+            case BaseFile.TYPE_VIDEO:
                 mToolbar.setTitle("选择视频");
-                bundle.putInt(TYPE_SELECT, File.TYPE_VIDEO);
+                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_VIDEO);
                 break;
-            case File.TYPE_MEDIANONE:
+            case BaseFile.TYPE_MEDIANONE:
                 mToolbar.setTitle("选择文档");
-                bundle.putInt(TYPE_SELECT, File.TYPE_MEDIANONE);
+                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_MEDIANONE);
                 break;
-            case File.TYPE_ALL:
+            case BaseFile.TYPE_ALL:
                 mToolbar.setTitle("选择文件");
-                bundle.putInt(TYPE_SELECT, File.TYPE_ALL);
+                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_ALL);
                 btnFolders.setVisibility(View.GONE);
                 break;
         }
@@ -69,7 +69,7 @@ public class MultiFileSelectorActivity extends AppCompatActivity {
             }
         });
 
-        btnFolders.setText("所有"+ File.TYPE_NAME.get(mSelectType));
+        btnFolders.setText("所有"+ BaseFile.TYPE_NAME.get(mSelectType));
         btnFolders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

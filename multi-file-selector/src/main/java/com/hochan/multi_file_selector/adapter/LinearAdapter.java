@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.hochan.multi_file_selector.R;
 import com.hochan.multi_file_selector.data.AudioFile;
-import com.hochan.multi_file_selector.data.File;
+import com.hochan.multi_file_selector.data.BaseFile;
 import com.hochan.multi_file_selector.data.NoneMediaFile;
 import com.hochan.multi_file_selector.data.VideoFile;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by Administrator on 2016/5/19.
  */
 public class LinearAdapter extends RecyclerView.Adapter{
@@ -39,8 +40,8 @@ public class LinearAdapter extends RecyclerView.Adapter{
             .parse("content://media/external/audio/albumart");
 
     private Context mContext;
-    private List<File> mFiles = new ArrayList<>();
-    private List<File> mSelectedFiles = new ArrayList<>();
+    private List<BaseFile> mBaseFiles = new ArrayList<>();
+    private List<BaseFile> mSelectedBaseFiles = new ArrayList<>();
     private int mAlbumSize;
     private int mType;
 
@@ -52,8 +53,8 @@ public class LinearAdapter extends RecyclerView.Adapter{
         this.mAlbumSize = ScreenTools.dip2px(context, 50);
     }
 
-    public void setData(List<File> mFiles){
-        this.mFiles = mFiles;
+    public void setData(List<BaseFile> mBaseFiles){
+        this.mBaseFiles = mBaseFiles;
         notifyDataSetChanged();
     }
 
@@ -66,14 +67,14 @@ public class LinearAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final LinearViewHolder viewHolder = (LinearViewHolder) holder;
-        if(mType == File.TYPE_AUDIO) {
-            AudioFile audioFile = (AudioFile) mFiles.get(position);
-            if (mSelectedFiles.contains(audioFile)) {
+        if(mType == BaseFile.TYPE_AUDIO) {
+            AudioFile audioFile = (AudioFile) mBaseFiles.get(position);
+            if (mSelectedBaseFiles.contains(audioFile)) {
                 viewHolder.ivCheck.setImageResource(R.drawable.checkbox_checked);
             } else {
                 viewHolder.ivCheck.setImageResource(R.drawable.checkbox_unchecked);
             }
-            viewHolder.tvName.setText(audioFile.getmName());
+            viewHolder.tvName.setText(audioFile.getName());
             viewHolder.tvDuration.setText(Tool.getDurationFormat(audioFile.getmDuration()));
 
             Picasso.with(mContext)
@@ -82,18 +83,18 @@ public class LinearAdapter extends RecyclerView.Adapter{
                     .resize(mAlbumSize, mAlbumSize)
                     .centerCrop()
                     .into(viewHolder.sivIcon);
-        }else if(mType == File.TYPE_MEDIANONE){
-            NoneMediaFile noneMediaFile = (NoneMediaFile) mFiles.get(position);
+        }else if(mType == BaseFile.TYPE_MEDIANONE){
+            NoneMediaFile noneMediaFile = (NoneMediaFile) mBaseFiles.get(position);
 
-            if (mSelectedFiles.contains(noneMediaFile)) {
+            if (mSelectedBaseFiles.contains(noneMediaFile)) {
                 viewHolder.ivCheck.setImageResource(R.drawable.checkbox_checked);
             } else {
                 viewHolder.ivCheck.setImageResource(R.drawable.checkbox_unchecked);
             }
 
-            viewHolder.tvName.setText(noneMediaFile.getmName());
+            viewHolder.tvName.setText(noneMediaFile.getName());
             viewHolder.tvDuration.setVisibility(View.GONE);
-            switch (noneMediaFile.getmType()){
+            switch (noneMediaFile.getType()){
                 case NoneMediaFile.TYPE_PDF:
                     viewHolder.sivIcon.setImageResource(R.drawable.icon_list_pdf);
                     break;
@@ -107,14 +108,14 @@ public class LinearAdapter extends RecyclerView.Adapter{
                     viewHolder.sivIcon.setImageResource(R.drawable.icon_list_excel);
                     break;
             }
-        }else if(mType == File.TYPE_VIDEO){
-            VideoFile videoFile = (VideoFile) mFiles.get(position);
-            if (mSelectedFiles.contains(videoFile)) {
+        }else if(mType == BaseFile.TYPE_VIDEO){
+            VideoFile videoFile = (VideoFile) mBaseFiles.get(position);
+            if (mSelectedBaseFiles.contains(videoFile)) {
                 viewHolder.ivCheck.setImageResource(R.drawable.checkbox_checked);
             } else {
                 viewHolder.ivCheck.setImageResource(R.drawable.checkbox_unchecked);
             }
-            viewHolder.tvName.setText(videoFile.getmName());
+            viewHolder.tvName.setText(videoFile.getName());
             viewHolder.tvDuration.setText(Tool.getDurationFormat(videoFile.getmDuration()));
 
             String thumbnail = videoFile.getmThumbnailPath();
@@ -124,20 +125,18 @@ public class LinearAdapter extends RecyclerView.Adapter{
                         .load(file)
                         .placeholder(R.drawable.icon_list_videofile)
                         .into(viewHolder.sivIcon);
-                //System.out.println("缩略图不为空："+videoFile.getmPath()+" "+thumbnail);
             }else{
-                System.out.println("图片为空："+videoFile.getmPath());
+                System.out.println("图片为空："+videoFile.getPath());
                 viewHolder.sivIcon.setImageResource(R.drawable.icon_list_videofile);
-                viewHolder.sivIcon.setTag(videoFile.getmPath());
-                GetVideoThumbnail getVideoThumbnail = new GetVideoThumbnail(viewHolder.sivIcon, videoFile.getmPath());
-                //getVideoThumbnail.execute(videoFile.getmPath());
+                viewHolder.sivIcon.setTag(videoFile.getPath());
+                GetVideoThumbnail getVideoThumbnail = new GetVideoThumbnail(viewHolder.sivIcon, videoFile.getPath());
             }
         }
     }
 
     @Override
     public int getItemCount() {
-        return mFiles.size();
+        return mBaseFiles.size();
     }
 
     class LinearViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -158,14 +157,14 @@ public class LinearAdapter extends RecyclerView.Adapter{
 
         @Override
         public void onClick(View v) {
-            if(mSelectedFiles.contains(mFiles.get(getPosition()))){
+            if(mSelectedBaseFiles.contains(mBaseFiles.get(getPosition()))){
                 ivCheck.setImageResource(R.drawable.checkbox_unchecked);
-                mSelectedFiles.remove(mFiles.get(getPosition()));
+                mSelectedBaseFiles.remove(mBaseFiles.get(getPosition()));
             }else{
                 ivCheck.setImageResource(R.drawable.checkbox_checked);
-                mSelectedFiles.add(mFiles.get(getPosition()));
+                mSelectedBaseFiles.add(mBaseFiles.get(getPosition()));
             }
-            mAdapterListener.fileSelected(mSelectedFiles.size());
+            mAdapterListener.fileSelected(mSelectedBaseFiles.size());
         }
     }
 
@@ -199,7 +198,7 @@ public class LinearAdapter extends RecyclerView.Adapter{
         this.mAdapterListener = mAdapterListener;
     }
 
-    public List<File> getmSelectedFiles() {
-        return mSelectedFiles;
+    public List<BaseFile> getmSelectedFiles() {
+        return mSelectedBaseFiles;
     }
 }

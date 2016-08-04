@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hochan.multi_file_selector.R;
-import com.hochan.multi_file_selector.data.File;
+import com.hochan.multi_file_selector.data.BaseFile;
 import com.hochan.multi_file_selector.data.VideoFile;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
 import com.hochan.multi_file_selector.tool.Tool;
@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class VideoAdapter extends RecyclerView.Adapter{
 
-    private List<File> mVideoFiles = new ArrayList<>();
-    private List<File> mSelectedVideos = new ArrayList<>();
+    private List<BaseFile> mVideoFiles = new ArrayList<>();
+    private List<BaseFile> mSelectedVideos = new ArrayList<>();
 
     private Context mContext;
 
@@ -33,8 +33,8 @@ public class VideoAdapter extends RecyclerView.Adapter{
         this.mContext = context;
     }
 
-    public void setData(List<File> files){
-        this.mVideoFiles = files;
+    public void setData(List<BaseFile> baseFiles){
+        this.mVideoFiles = baseFiles;
         notifyDataSetChanged();
     }
 
@@ -48,7 +48,7 @@ public class VideoAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         VideoViewHolder videoViewHolder = (VideoViewHolder) holder;
         VideoFile videoFile = (VideoFile) mVideoFiles.get(position);
-        videoViewHolder.tvVideoName.setText(videoFile.getmName());
+        videoViewHolder.tvVideoName.setText(videoFile.getName());
         videoViewHolder.tvVideoDuration.setText(Tool.getDurationFormat(videoFile.getmDuration()));
 
     }
@@ -89,7 +89,7 @@ public class VideoAdapter extends RecyclerView.Adapter{
         return mAdapterListener;
     }
 
-    public List<File> getmSelectedVideos() {
+    public List<BaseFile> getmSelectedVideos() {
         return mSelectedVideos;
     }
 }

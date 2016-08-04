@@ -3,9 +3,10 @@ package com.hochan.multi_file_selector.data;
 import java.util.ArrayList;
 
 /**
- * Created by Administrator on 2016/5/10.
+ *
+ * Created by hochan on 2016/5/10.
  */
-public class File {
+public class BaseFile {
 
     public final static int TYPE_IMAGE = 0;
     public final static int TYPE_AUDIO = 1;
@@ -29,7 +30,7 @@ public class File {
     private String mDataAdded;
     private long mSize;
 
-    public File(int mType, String mName, String mPath, String mDataAdded, long mSzie) {
+    public BaseFile(int mType, String mName, String mPath, String mDataAdded, long mSzie) {
         this.mType = mType;
         this.mName = mName;
         this.mPath = mPath;
@@ -40,52 +41,32 @@ public class File {
     @Override
     public boolean equals(Object o){
         try {
-            File file = (File) o;
-            return this.mPath.equals(file.mPath);
+            BaseFile baseFile = (BaseFile) o;
+            return this.mPath.equals(baseFile.mPath);
         }catch (ClassCastException e){
             e.printStackTrace();
         }
         return super.equals(o);
     }
 
-    public int getmType() {
+    public int getType() {
         return mType;
     }
 
-    public void setmType(int mType) {
+    public void setType(int mType) {
         this.mType = mType;
     }
 
-    public String getmName() {
+    public String getName() {
         return mName;
     }
 
-    public void setmName(String mName) {
+    public void setName(String mName) {
         this.mName = mName;
     }
 
-    public String getmPath() {
+    public String getPath() {
         return mPath;
-    }
-
-    public void setmPath(String mPath) {
-        this.mPath = mPath;
-    }
-
-    public long getmSize() {
-        return mSize;
-    }
-
-    public void setmSize(long mSize) {
-        this.mSize = mSize;
-    }
-
-    public String getmDataAdded() {
-        return mDataAdded;
-    }
-
-    public void setmDataAdded(String mDataAdded) {
-        this.mDataAdded = mDataAdded;
     }
 
 }

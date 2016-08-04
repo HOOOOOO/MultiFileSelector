@@ -5,14 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hochan.multi_file_selector.MultiFileSelectorActivity;
 import com.hochan.multi_file_selector.MultiFileSelectorFragment;
-import com.hochan.multi_file_selector.data.File;
+import com.hochan.multi_file_selector.data.BaseFile;
 
 import java.util.ArrayList;
 
@@ -52,24 +50,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.setClass(this, MultiFileSelectorActivity.class);
         switch (v.getId()){
             case R.id.btn_select_image:
-                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_IMAGE);
-                startActivityForResult(intent, File.TYPE_IMAGE);
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, BaseFile.TYPE_IMAGE);
+                startActivityForResult(intent, BaseFile.TYPE_IMAGE);
                 break;
             case R.id.btn_select_audio:
-                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_AUDIO);
-                startActivityForResult(intent, File.TYPE_AUDIO);
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, BaseFile.TYPE_AUDIO);
+                startActivityForResult(intent, BaseFile.TYPE_AUDIO);
                 break;
             case R.id.btn_select_video:
-                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_VIDEO);
-                //startActivityForResult(intent, File.TYPE_VIDEO);
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, BaseFile.TYPE_VIDEO);
+                //startActivityForResult(intent, BaseFile.TYPE_VIDEO);
                 break;
             case R.id.btn_select_text:
-                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_MEDIANONE);
-                startActivityForResult(intent, File.TYPE_MEDIANONE);
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, BaseFile.TYPE_MEDIANONE);
+                startActivityForResult(intent, BaseFile.TYPE_MEDIANONE);
                 break;
             case R.id.btn_select_all:
-                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, File.TYPE_ALL);
-                startActivityForResult(intent, File.TYPE_ALL);
+                intent.putExtra(MultiFileSelectorActivity.TYPE_SELECT, BaseFile.TYPE_ALL);
+                startActivityForResult(intent, BaseFile.TYPE_ALL);
                 break;
         }
     }

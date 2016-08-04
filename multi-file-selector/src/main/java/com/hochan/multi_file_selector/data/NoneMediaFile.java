@@ -4,7 +4,7 @@ package com.hochan.multi_file_selector.data;
 /**
  * Created by Administrator on 2016/5/20.
  */
-public class NoneMediaFile extends File{
+public class NoneMediaFile extends BaseFile {
 
     public final static int TYPE_TXT = 10;
     public final static int TYPE_PDF = 11;

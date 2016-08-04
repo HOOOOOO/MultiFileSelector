@@ -5,7 +5,7 @@ import android.net.Uri;
 /**
  * Created by Administrator on 2016/5/19.
  */
-public class VideoFile extends File {
+public class VideoFile extends BaseFile {
 
     private long mDuration;
     private Uri mCoverUri;

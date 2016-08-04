@@ -12,24 +12,24 @@ public class Folder {
 
     private String mName;
     private String mPath;
-    private List<File> mFiles;
+    private List<BaseFile> mBaseFiles;
     private int mMediaType;
     private Uri mFolderCover;
 
-    public Folder(int mediaType, String mName, String mPath, List<File> mFiles) {
+    public Folder(int mediaType, String mName, String mPath, List<BaseFile> mBaseFiles) {
         this.mMediaType = mediaType;
         this.mName = mName;
         this.mPath = mPath;
-        this.mFiles = mFiles;
+        this.mBaseFiles = mBaseFiles;
         switch (mMediaType){
-            case File.TYPE_IMAGE:
-                mFolderCover = Uri.fromFile(new java.io.File(mFiles.get(0).getmPath()));
+            case BaseFile.TYPE_IMAGE:
+                mFolderCover = Uri.fromFile(new java.io.File(mBaseFiles.get(0).getPath()));
                 break;
-            case File.TYPE_AUDIO:
-                mFolderCover = ((AudioFile) mFiles.get(0)).getmAlbumUri();
+            case BaseFile.TYPE_AUDIO:
+                mFolderCover = ((AudioFile) mBaseFiles.get(0)).getmAlbumUri();
                 break;
-            case File.TYPE_VIDEO:
-                String thumbnailPath = ((VideoFile)mFiles.get(0)).getmThumbnailPath();
+            case BaseFile.TYPE_VIDEO:
+                String thumbnailPath = ((VideoFile) mBaseFiles.get(0)).getmThumbnailPath();
                 if(!TextUtils.isEmpty(thumbnailPath)){
                     java.io.File file = new java.io.File(thumbnailPath);
                     mFolderCover = Uri.fromFile(file);
@@ -54,12 +54,12 @@ public class Folder {
         this.mPath = mPath;
     }
 
-    public List<File> getmFiles() {
-        return mFiles;
+    public List<BaseFile> getmFiles() {
+        return mBaseFiles;
     }
 
-    public void setmFiles(List<File> mFiles) {
-        this.mFiles = mFiles;
+    public void setmFiles(List<BaseFile> mBaseFiles) {
+        this.mBaseFiles = mBaseFiles;
     }
 
     public Uri getmFolderCover() {

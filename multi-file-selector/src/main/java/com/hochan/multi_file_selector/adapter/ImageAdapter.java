@@ -1,7 +1,6 @@
 package com.hochan.multi_file_selector.adapter;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.view.ViewGroup;
 import com.hochan.multi_file_selector.MultiFileSelectorFragment;
 import com.hochan.multi_file_selector.R;
 import com.hochan.multi_file_selector.data.ImageFile;
-import com.hochan.multi_file_selector.data.File;
+import com.hochan.multi_file_selector.data.BaseFile;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
 import com.hochan.multi_file_selector.tool.ScreenTools;
 import com.hochan.multi_file_selector.view.SquaredImageView;
@@ -24,8 +23,8 @@ import java.util.List;
  */
 public class ImageAdapter extends RecyclerView.Adapter{
 
-    private ArrayList<File> mImageFiles = new ArrayList<>();
-    private ArrayList<File> mSelectedImages = new ArrayList<>();
+    private ArrayList<BaseFile> mImageFiles = new ArrayList<>();
+    private ArrayList<BaseFile> mSelectedImages = new ArrayList<>();
     private Context mContext;
 
     private final int mGridWidth;
@@ -35,12 +34,12 @@ public class ImageAdapter extends RecyclerView.Adapter{
         this.mGridWidth = ScreenTools.getScreenWidth(context)/column;
     }
 
-    public void setData(List<File> images){
-        mImageFiles = (ArrayList<File>) images;
+    public void setData(List<BaseFile> images){
+        mImageFiles = (ArrayList<BaseFile>) images;
         notifyDataSetChanged();
     }
 
-    public List<File> getSelectedImages(){
+    public List<BaseFile> getSelectedImages(){
         return mSelectedImages;
     }
 
@@ -60,7 +59,7 @@ public class ImageAdapter extends RecyclerView.Adapter{
         }else{
             imageViewHolder.sivMask.setVisibility(View.GONE);
         }
-        java.io.File image = new java.io.File(mImageFiles.get(position).getmPath());
+        java.io.File image = new java.io.File(mImageFiles.get(position).getPath());
         if(image.exists()) {
             Picasso.with(mContext)
                     .load(image)

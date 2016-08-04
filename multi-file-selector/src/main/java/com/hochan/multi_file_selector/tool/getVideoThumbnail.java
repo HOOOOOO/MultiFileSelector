@@ -9,6 +9,7 @@ import android.view.View;
 import com.hochan.multi_file_selector.view.SquaredImageView;
 
 /**
+ *
  * Created by Administrator on 2016/5/21.
  */
 public class GetVideoThumbnail extends AsyncTask<String, Void, Bitmap>{
