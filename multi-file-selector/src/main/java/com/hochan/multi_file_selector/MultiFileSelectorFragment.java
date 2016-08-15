@@ -220,21 +220,21 @@ public class MultiFileSelectorFragment extends Fragment
         switch (mSelectType) {
             case BaseFile.TYPE_IMAGE:
                 mImageAdapter.setData((ArrayList<BaseFile>) baseFiles);
-                Folder folder = new Folder(BaseFile.TYPE_IMAGE, "所有图片", null, baseFiles);
+                Folder folder = new Folder(BaseFile.TYPE_IMAGE, mContext.getString(R.string.str_all_pics), null, baseFiles);
                 folders.add(0, folder);
                 mFolderAdapter.setData(folders);
                 System.out.println(baseFiles.size());
                 break;
             case BaseFile.TYPE_AUDIO:
                 mLinearAdapter.setData(baseFiles);
-                Folder audioFolder = new Folder(BaseFile.TYPE_AUDIO, "所有音乐", null, baseFiles);
+                Folder audioFolder = new Folder(BaseFile.TYPE_AUDIO, mContext.getString(R.string.str_all_music), null, baseFiles);
                 folders.add(0, audioFolder);
                 mFolderAdapter.setData(folders);
                 System.out.println(baseFiles.size());
                 break;
             case BaseFile.TYPE_VIDEO:
                 mLinearAdapter.setData(baseFiles);
-                Folder videoFolder = new Folder(BaseFile.TYPE_VIDEO, "所有视频", null, baseFiles);
+                Folder videoFolder = new Folder(BaseFile.TYPE_VIDEO, mContext.getString(R.string.str_all_videos), null, baseFiles);
                 folders.add(0, videoFolder);
                 mFolderAdapter.setData(folders);
                 break;
@@ -254,9 +254,9 @@ public class MultiFileSelectorFragment extends Fragment
     @Override
     public void fileSelected(int selectedCount) {
         if(selectedCount > 0)
-            btnOpera.setText(String.format("完成(%s)", Integer.valueOf(selectedCount)));
+            btnOpera.setText(String.format(mContext.getString(R.string.str_finish), Integer.valueOf(selectedCount)));
         else
-            btnOpera.setText("取消");
+            btnOpera.setText(R.string.str_cancle);
     }
 
     @Override

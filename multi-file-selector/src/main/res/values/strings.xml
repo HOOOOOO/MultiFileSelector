@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Multi-File-Selector</string>
+    <string name="str_all_pics">All Pictures</string>
+    <string name="str_all_music">All Music</string>
+    <string name="str_finish">Complete(%s)</string>
+    <string name="str_cancle">Cancle</string>
+    <string name="str_all_videos">All Videos</string>
 </resources>
