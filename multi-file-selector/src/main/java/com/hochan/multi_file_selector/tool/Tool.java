@@ -12,11 +12,11 @@ public class Tool {
         int minute = tmpminute % 60;
         int second = tmpsecond % 60;
         if(hour > 0)
-            return String.format("%s小时%s分%s秒", hour, minute, second);
+            return String.format("%s:%s:%s", hour, minute, second);
         else if(minute > 0)
-            return String.format("%s分%s秒", minute, second);
+            return String.format("%s:%s", minute, second);
         else{
-            return String.format("%s秒", second);
+            return String.format("%ss", second);
         }
     }
 }

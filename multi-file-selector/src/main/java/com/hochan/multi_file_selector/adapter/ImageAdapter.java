@@ -98,7 +98,7 @@ public class ImageAdapter extends RecyclerView.Adapter{
 
                 //sivMask.setImageTintList(ColorStateList.valueOf(mContext.getResources().getColor()));
             }
-            System.out.println("已选图片数目："+mSelectedImages.size());
+            System.out.println(mContext.getString(R.string.str_selected_count)+mSelectedImages.size());
             if(mAdapaterListener != null){
                 mAdapaterListener.fileSelected(mSelectedImages.size());
             }

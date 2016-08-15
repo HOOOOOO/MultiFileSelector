@@ -3,6 +3,8 @@ package com.hochan.multi_file_selector.data;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.hochan.multi_file_selector.MultiFileSelectorActivity;
+
 import java.util.List;
 
 /**
@@ -22,13 +24,13 @@ public class Folder {
         this.mPath = mPath;
         this.mBaseFiles = mBaseFiles;
         switch (mMediaType){
-            case BaseFile.TYPE_IMAGE:
+            case MultiFileSelectorActivity.TYPE_IMAGE:
                 mFolderCover = Uri.fromFile(new java.io.File(mBaseFiles.get(0).getPath()));
                 break;
-            case BaseFile.TYPE_AUDIO:
+            case MultiFileSelectorActivity.TYPE_AUDIO:
                 mFolderCover = ((AudioFile) mBaseFiles.get(0)).getmAlbumUri();
                 break;
-            case BaseFile.TYPE_VIDEO:
+            case MultiFileSelectorActivity.TYPE_VIDEO:
                 String thumbnailPath = ((VideoFile) mBaseFiles.get(0)).getmThumbnailPath();
                 if(!TextUtils.isEmpty(thumbnailPath)){
                     java.io.File file = new java.io.File(thumbnailPath);

@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
+ *
  * Created by Administrator on 2016/5/14.
  */
 public class MultiFileSelectorFragment extends Fragment
@@ -92,20 +94,20 @@ public class MultiFileSelectorFragment extends Fragment
         mContext = getContext();
 
         mSelectType = getArguments().getInt(MultiFileSelectorActivity.TYPE_SELECT);
-        System.out.println("选择文件类型："+mSelectType);
+        System.out.println(mContext.getString(R.string.str_select_type)+mSelectType);
 
         rclvMediaFiles = (RecyclerView) view.findViewById(R.id.rclv_images);
         btnArtists = (Button) view.findViewById(R.id.btn_artists);
         //btnFolders = (Button) view.findViewById(R.id.btn_folders);
         btnOpera = (Button) view.findViewById(R.id.btn_opera);
-        btnOpera.setText("取消");
+        btnOpera.setText(R.string.str_cancle);
 
         mFolderAdapter = new FolderAdapter(mContext);
         mProgressBar = (AVLoadingIndicatorView) view.findViewById(R.id.avloadingIndicatorView);
         llFolder = (LinearLayout) view.findViewById(R.id.ll_folder);
 
         switch (mSelectType){
-            case BaseFile.TYPE_IMAGE:
+            case MultiFileSelectorActivity.TYPE_IMAGE:
                 btnArtists.setVisibility(View.GONE);
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, mImageColumn);
                 rclvMediaFiles.setLayoutManager(gridLayoutManager);
@@ -125,19 +127,19 @@ public class MultiFileSelectorFragment extends Fragment
                     }
                 });
                 break;
-            case BaseFile.TYPE_AUDIO:
-                mLinearAdapter = new LinearAdapter(mContext, BaseFile.TYPE_AUDIO);
+            case MultiFileSelectorActivity.TYPE_AUDIO:
+                mLinearAdapter = new LinearAdapter(mContext, MultiFileSelectorActivity.TYPE_AUDIO);
                 initRecyclerView();
                 break;
-            case BaseFile.TYPE_MEDIANONE:
-                mLinearAdapter = new LinearAdapter(mContext, BaseFile.TYPE_MEDIANONE);
+            case MultiFileSelectorActivity.TYPE_MEDIANONE:
+                mLinearAdapter = new LinearAdapter(mContext, MultiFileSelectorActivity.TYPE_MEDIANONE);
                 initRecyclerView();
                 break;
-            case BaseFile.TYPE_VIDEO:
-                mLinearAdapter = new LinearAdapter(mContext, BaseFile.TYPE_VIDEO);
+            case MultiFileSelectorActivity.TYPE_VIDEO:
+                mLinearAdapter = new LinearAdapter(mContext, MultiFileSelectorActivity.TYPE_VIDEO);
                 initRecyclerView();
                 break;
-            case BaseFile.TYPE_ALL:
+            case MultiFileSelectorActivity.TYPE_ALL:
                 llFolder.setVisibility(View.VISIBLE);
                 mAllFileAdapter = new AllFileAdapter(mContext);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
@@ -177,7 +179,7 @@ public class MultiFileSelectorFragment extends Fragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(mSelectType != BaseFile.TYPE_ALL) {
+        if(mSelectType != MultiFileSelectorActivity.TYPE_ALL) {
             mLoaderCallback = new DataLoader(getActivity(), mSelectType);
             mLoaderCallback.setCallBack(this);
             getActivity().getSupportLoaderManager().initLoader(
@@ -200,12 +202,12 @@ public class MultiFileSelectorFragment extends Fragment
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mFolderPopupWindow.dismiss();
                 switch (mSelectType){
-                    case BaseFile.TYPE_IMAGE:
+                    case MultiFileSelectorActivity.TYPE_IMAGE:
                         mImageAdapter.setData((mFolderAdapter.getItem(position)).getmFiles());
                         break;
-                    case BaseFile.TYPE_AUDIO:
-                    case BaseFile.TYPE_MEDIANONE:
-                    case BaseFile.TYPE_VIDEO:
+                    case MultiFileSelectorActivity.TYPE_AUDIO:
+                    case MultiFileSelectorActivity.TYPE_MEDIANONE:
+                    case MultiFileSelectorActivity.TYPE_VIDEO:
                         mLinearAdapter.setData(mFolderAdapter.getItem(position).getmFiles());
                         break;
                 }
@@ -218,29 +220,29 @@ public class MultiFileSelectorFragment extends Fragment
     @Override
     public void finish(List<BaseFile> baseFiles, List<Folder> folders) {
         switch (mSelectType) {
-            case BaseFile.TYPE_IMAGE:
+            case MultiFileSelectorActivity.TYPE_IMAGE:
                 mImageAdapter.setData((ArrayList<BaseFile>) baseFiles);
-                Folder folder = new Folder(BaseFile.TYPE_IMAGE, mContext.getString(R.string.str_all_pics), null, baseFiles);
+                Folder folder = new Folder(MultiFileSelectorActivity.TYPE_IMAGE, mContext.getString(R.string.str_all_pics), null, baseFiles);
                 folders.add(0, folder);
                 mFolderAdapter.setData(folders);
                 System.out.println(baseFiles.size());
                 break;
-            case BaseFile.TYPE_AUDIO:
+            case MultiFileSelectorActivity.TYPE_AUDIO:
                 mLinearAdapter.setData(baseFiles);
-                Folder audioFolder = new Folder(BaseFile.TYPE_AUDIO, mContext.getString(R.string.str_all_music), null, baseFiles);
+                Folder audioFolder = new Folder(MultiFileSelectorActivity.TYPE_AUDIO, mContext.getString(R.string.str_all_music), null, baseFiles);
                 folders.add(0, audioFolder);
                 mFolderAdapter.setData(folders);
                 System.out.println(baseFiles.size());
                 break;
-            case BaseFile.TYPE_VIDEO:
+            case MultiFileSelectorActivity.TYPE_VIDEO:
                 mLinearAdapter.setData(baseFiles);
-                Folder videoFolder = new Folder(BaseFile.TYPE_VIDEO, mContext.getString(R.string.str_all_videos), null, baseFiles);
+                Folder videoFolder = new Folder(MultiFileSelectorActivity.TYPE_VIDEO, mContext.getString(R.string.str_all_videos), null, baseFiles);
                 folders.add(0, videoFolder);
                 mFolderAdapter.setData(folders);
                 break;
-            case BaseFile.TYPE_MEDIANONE:
+            case MultiFileSelectorActivity.TYPE_MEDIANONE:
                 mLinearAdapter.setData(baseFiles);
-                Folder noneMediaFolder = new Folder(BaseFile.TYPE_MEDIANONE, "所有文档", null, baseFiles);
+                Folder noneMediaFolder = new Folder(MultiFileSelectorActivity.TYPE_MEDIANONE, mContext.getString(R.string.str_all_documents), null, baseFiles);
                 folders.add(0, noneMediaFolder);
                 mFolderAdapter.setData(folders);
                 break;
@@ -278,7 +280,7 @@ public class MultiFileSelectorFragment extends Fragment
     private void sendBackImages(){
         ArrayList<String> resultList = new ArrayList<>();
         switch (mSelectType){
-            case BaseFile.TYPE_IMAGE:
+            case MultiFileSelectorActivity.TYPE_IMAGE:
                 if(mImageAdapter.getSelectedImages().size() == 0)
                     getActivity().finish();
                 else{
@@ -286,9 +288,9 @@ public class MultiFileSelectorFragment extends Fragment
                         resultList.add(baseFile.getPath());
                 }
                 break;
-            case BaseFile.TYPE_AUDIO:
-            case BaseFile.TYPE_MEDIANONE:
-            case BaseFile.TYPE_VIDEO:
+            case MultiFileSelectorActivity.TYPE_AUDIO:
+            case MultiFileSelectorActivity.TYPE_MEDIANONE:
+            case MultiFileSelectorActivity.TYPE_VIDEO:
                 if(mLinearAdapter.getmSelectedFiles().size() == 0)
                     getActivity().finish();
                 else{
@@ -296,7 +298,7 @@ public class MultiFileSelectorFragment extends Fragment
                         resultList.add(baseFile.getPath());
                 }
                 break;
-            case BaseFile.TYPE_ALL:
+            case MultiFileSelectorActivity.TYPE_ALL:
                 if(mAllFileAdapter.getmSelectedFiled().size() == 0)
                     getActivity().finish();
                 else{

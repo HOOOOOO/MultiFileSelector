@@ -13,6 +13,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.webkit.MimeTypeMap;
 
+import com.hochan.multi_file_selector.MultiFileSelectorActivity;
 import com.hochan.multi_file_selector.data.AudioFile;
 import com.hochan.multi_file_selector.data.Folder;
 import com.hochan.multi_file_selector.data.ImageFile;
@@ -63,9 +64,9 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
         VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media._ID);            //5
         VIDEO_PROJECTION_LIST.add(MediaStore.Video.Media.DURATION);       //6
 
-        MEDIA_PROJECTION_LIST.add(BaseFile.TYPE_IMAGE, IMAGE_PROJECTION_LIST);
-        MEDIA_PROJECTION_LIST.add(BaseFile.TYPE_AUDIO, AUDIO_PROJECTION_LIST);
-        MEDIA_PROJECTION_LIST.add(BaseFile.TYPE_VIDEO, VIDEO_PROJECTION_LIST);
+        MEDIA_PROJECTION_LIST.add(MultiFileSelectorActivity.TYPE_IMAGE, IMAGE_PROJECTION_LIST);
+        MEDIA_PROJECTION_LIST.add(MultiFileSelectorActivity.TYPE_AUDIO, AUDIO_PROJECTION_LIST);
+        MEDIA_PROJECTION_LIST.add(MultiFileSelectorActivity.TYPE_VIDEO, VIDEO_PROJECTION_LIST);
     }
 
     private Context mContext;
@@ -83,30 +84,29 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id){
-            case BaseFile.TYPE_IMAGE:
+            case MultiFileSelectorActivity.TYPE_IMAGE:
                 CursorLoader acursorLoader = new CursorLoader(mContext,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         (String[]) IMAGE_PROJECTION_LIST.toArray(new String[IMAGE_PROJECTION_LIST.size()]),
-                        //?对应后面的selectionArgs用于转义特殊字符
                         IMAGE_PROJECTION_LIST.get(3)+">0 AND "+IMAGE_PROJECTION_LIST.get(4)+"=? OR "+IMAGE_PROJECTION_LIST.get(4)+"=? ",
                         new String[]{"image/jpeg", "image/png"},
                         IMAGE_PROJECTION_LIST.get(2) + " DESC");
                 return acursorLoader;
-            case BaseFile.TYPE_VIDEO:
+            case MultiFileSelectorActivity.TYPE_VIDEO:
                 CursorLoader bcursorLoader = new CursorLoader(mContext,
                         MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                         (String[]) VIDEO_PROJECTION_LIST.toArray(new String[IMAGE_PROJECTION_LIST.size()]),
                         VIDEO_PROJECTION_LIST.get(3)+">0 ",
                         null, VIDEO_PROJECTION_LIST.get(2)+" DESC");
                 return bcursorLoader;
-            case BaseFile.TYPE_AUDIO:
+            case MultiFileSelectorActivity.TYPE_AUDIO:
                 CursorLoader ccursorLoader = new CursorLoader(mContext,
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                         (String[]) AUDIO_PROJECTION_LIST.toArray(new String[AUDIO_PROJECTION_LIST.size()]),
                         AUDIO_PROJECTION_LIST.get(3)+">0 ",
                         null, AUDIO_PROJECTION_LIST.get(2)+" DESC");
                 return ccursorLoader;
-            case BaseFile.TYPE_MEDIANONE:
+            case MultiFileSelectorActivity.TYPE_MEDIANONE:
                 ContentResolver cr = mContext.getContentResolver();
                 Uri uri = MediaStore.Files.getContentUri("external");
                 String[] projection = null;
@@ -132,13 +132,12 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null) {
             if (data.getCount() > 0) {
-                System.out.println("corsur不为空:"+data.getCount());
                 data.moveToFirst();
                 mFolders = new ArrayList<>();
                 mBaseFiles = new ArrayList<>(data.getCount());
                 do {
 
-                    if(mType == BaseFile.TYPE_MEDIANONE){
+                    if(mType == MultiFileSelectorActivity.TYPE_MEDIANONE){
 
                         String mimeType = data.getString(
                                 data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MIME_TYPE));
@@ -172,7 +171,6 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	                String path = data.getString(
 			                data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(0)));
-	                System.out.println("----------------"+path);
 	                if(path == null) {
 		                continue;
 	                }
@@ -184,14 +182,14 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                             data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(3)));
 
                     switch (mType) {
-                        case BaseFile.TYPE_IMAGE:
-                            ImageFile imageFile = new ImageFile(BaseFile.TYPE_IMAGE,
+                        case MultiFileSelectorActivity.TYPE_IMAGE:
+                            ImageFile imageFile = new ImageFile(MultiFileSelectorActivity.TYPE_IMAGE,
                                     displayName, path, dateAdded, size);
                             mBaseFiles.add(imageFile);
                             addToFolder(imageFile);
                             break;
-                        case BaseFile.TYPE_AUDIO:
-                            AudioFile audioFile = new AudioFile(BaseFile.TYPE_AUDIO,
+                        case MultiFileSelectorActivity.TYPE_AUDIO:
+                            AudioFile audioFile = new AudioFile(MultiFileSelectorActivity.TYPE_AUDIO,
                                     displayName, path, dateAdded, size);
                             audioFile.setmDuration(
                                     data.getLong(data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(7))));
@@ -199,8 +197,8 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                             mBaseFiles.add(audioFile);
                             addToFolder(audioFile);
                             break;
-                        case BaseFile.TYPE_VIDEO:
-                            VideoFile videoFile = new VideoFile(BaseFile.TYPE_VIDEO,
+                        case MultiFileSelectorActivity.TYPE_VIDEO:
+                            VideoFile videoFile = new VideoFile(MultiFileSelectorActivity.TYPE_VIDEO,
                                     displayName, path, dateAdded, size);
                             videoFile.setmDuration(data.getLong(data.getColumnIndexOrThrow(MEDIA_PROJECTION_LIST.get(mType).get(6))));
 
@@ -218,8 +216,6 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                                     String thumbnail = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA));
                                     //System.out.println(thumbnail);
                                     videoFile.setmThumbnailPath(thumbnail);
-                                }else {
-                                    System.out.println("结果为空");
                                 }
                             }finally {
                                 cursor.close();
@@ -236,11 +232,7 @@ public class DataLoader implements LoaderManager.LoaderCallbacks<Cursor> {
                     System.out.println(mBaseFiles.size());
                     mCallBack.finish(mBaseFiles, mFolders);
                 }
-            } else {
-                System.out.println("查询结果为空" + data.getCount());
             }
-        }else {
-            System.out.println("cursor为空");
         }
     }
 

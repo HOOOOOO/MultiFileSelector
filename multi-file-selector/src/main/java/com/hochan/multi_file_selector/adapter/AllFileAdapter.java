@@ -33,6 +33,7 @@ public class AllFileAdapter extends RecyclerView.Adapter{
     }
 
     @Override
+
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_linear_item, parent, false);
         return new AllFileViewHolder(view);
@@ -52,7 +53,6 @@ public class AllFileAdapter extends RecyclerView.Adapter{
         if(file.isDirectory()){
             viewHolder.sivIcon.setImageResource(R.drawable.icon_list_folder);
             viewHolder.ivCheck.setVisibility(View.INVISIBLE);
-            //System.out.println("是文件夹");
         }else{
             viewHolder.ivCheck.setVisibility(View.VISIBLE);
             if(name.endsWith(".mp3"))
@@ -114,7 +114,7 @@ public class AllFileAdapter extends RecyclerView.Adapter{
 
     public void setmAdapterListener(MediaFileAdapterListener mAdapterListener) {
         this.mAdapterListener = mAdapterListener;
-        File file = new File("", "手机");
+        File file = new File("", mContext.getString(com.hochan.multi_file_selector.R.string.str_phone));
         mAdapterListener.recordFolder(file);
     }
 
@@ -123,7 +123,7 @@ public class AllFileAdapter extends RecyclerView.Adapter{
     }
 
     public void updateFolder(File file){
-        if(file.getName().endsWith("手机")){
+        if(file.getName().endsWith(mContext.getString(com.hochan.multi_file_selector.R.string.str_phone))){
             mFiles = new File[]{new File("/storage/sdcard0"), new File("/storage/sdcard1")};
             notifyDataSetChanged();
             return;

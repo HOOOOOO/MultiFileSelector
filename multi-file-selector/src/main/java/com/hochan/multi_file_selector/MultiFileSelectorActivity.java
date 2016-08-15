@@ -9,9 +9,16 @@ import android.widget.Button;
 
 import com.hochan.multi_file_selector.data.BaseFile;
 
+import java.util.ArrayList;
+
 public class MultiFileSelectorActivity extends AppCompatActivity {
 
     public final static String TYPE_SELECT = "type_select";
+    public final static int TYPE_IMAGE = 0;
+    public final static int TYPE_AUDIO = 1;
+    public final static int TYPE_VIDEO = 2;
+    public final static int TYPE_MEDIANONE = 3;
+    public final static int TYPE_ALL = 4;
 
     private int mSelectType = 0;
 
@@ -19,10 +26,21 @@ public class MultiFileSelectorActivity extends AppCompatActivity {
     private Button btnFolders;
     private MultiFileSelectorFragment mFragment;
 
+    public final static ArrayList<String> TYPE_NAME = new ArrayList<>();
+
+    static {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multi_file_selector);
+
+        TYPE_NAME.add(TYPE_IMAGE, getString(R.string.str_picture));
+        TYPE_NAME.add(TYPE_AUDIO, getString(R.string.str_music));
+        TYPE_NAME.add(TYPE_VIDEO, getString(R.string.str_video));
+        TYPE_NAME.add(TYPE_MEDIANONE, getString(R.string.str_doc));
+        TYPE_NAME.add(TYPE_ALL, getString(R.string.str_file));
 
         mSelectType = getIntent().getIntExtra(TYPE_SELECT, 0);
 
@@ -30,25 +48,25 @@ public class MultiFileSelectorActivity extends AppCompatActivity {
         btnFolders = (Button) findViewById(R.id.btn_folders);
         Bundle bundle = new Bundle();
         switch (mSelectType){
-            case BaseFile.TYPE_IMAGE:
-                mToolbar.setTitle("选择图片");
-                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_IMAGE);
+            case TYPE_IMAGE:
+                mToolbar.setTitle(R.string.str_select_pics);
+                bundle.putInt(TYPE_SELECT, TYPE_IMAGE);
                 break;
-            case BaseFile.TYPE_AUDIO:
-                mToolbar.setTitle("选择音乐");
-                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_AUDIO);
+            case TYPE_AUDIO:
+                mToolbar.setTitle(R.string.str_select_music);
+                bundle.putInt(TYPE_SELECT, TYPE_AUDIO);
                 break;
-            case BaseFile.TYPE_VIDEO:
-                mToolbar.setTitle("选择视频");
-                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_VIDEO);
+            case TYPE_VIDEO:
+                mToolbar.setTitle(R.string.str_select_video);
+                bundle.putInt(TYPE_SELECT, TYPE_VIDEO);
                 break;
-            case BaseFile.TYPE_MEDIANONE:
-                mToolbar.setTitle("选择文档");
-                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_MEDIANONE);
+            case TYPE_MEDIANONE:
+                mToolbar.setTitle(R.string.str_select_doc);
+                bundle.putInt(TYPE_SELECT, TYPE_MEDIANONE);
                 break;
-            case BaseFile.TYPE_ALL:
-                mToolbar.setTitle("选择文件");
-                bundle.putInt(TYPE_SELECT, BaseFile.TYPE_ALL);
+            case TYPE_ALL:
+                mToolbar.setTitle(R.string.str_select_file);
+                bundle.putInt(TYPE_SELECT, TYPE_ALL);
                 btnFolders.setVisibility(View.GONE);
                 break;
         }
@@ -69,7 +87,7 @@ public class MultiFileSelectorActivity extends AppCompatActivity {
             }
         });
 
-        btnFolders.setText("所有"+ BaseFile.TYPE_NAME.get(mSelectType));
+        btnFolders.setText(getString(R.string.str_all)+ TYPE_NAME.get(mSelectType));
         btnFolders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

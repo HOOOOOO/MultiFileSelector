@@ -5,4 +5,20 @@
     <string name="str_finish">Complete(%s)</string>
     <string name="str_cancle">Cancle</string>
     <string name="str_all_videos">All Videos</string>
+    <string name="str_all_documents">All Documents</string>
+    <string name="str_phone">Phone</string>
+    <string name="str_selected_count">Selected：</string>
+    <string name="str_picture">图片</string>
+    <string name="str_select_pics">选择图片</string>
+    <string name="str_select_music">选择音乐</string>
+    <string name="str_select_video">选择视频</string>
+    <string name="str_select_doc">选择文档</string>
+    <string name="str_select_file">选择文件</string>
+    <string name="str_music">音频</string>
+    <string name="str_video">视频</string>
+    <string name="str_doc">文档</string>
+    <string name="str_file">文件</string>
+    <string name="str_select_type">选择文件类型：</string>
+    <string name="str_illegal">请输入正确的参数！</string>
+    <string name="str_all">所有</string>
 </resources>

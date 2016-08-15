@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.hochan.multi_file_selector.MultiFileSelectorActivity;
 import com.hochan.multi_file_selector.R;
 import com.hochan.multi_file_selector.data.BaseFile;
 import com.hochan.multi_file_selector.data.Folder;
@@ -74,7 +75,7 @@ public class FolderAdapter extends BaseAdapter{
         }
 
         switch (folder.getmMediaType()){
-            case BaseFile.TYPE_AUDIO:
+            case MultiFileSelectorActivity.TYPE_AUDIO:
                 Picasso.with(mContext)
                     .load(mFolders.get(position).getmFolderCover())
                     .placeholder(R.drawable.icon_list_audiofile)
@@ -82,7 +83,7 @@ public class FolderAdapter extends BaseAdapter{
                     .centerCrop()
                     .into(folderViewHolder.sivIcon);
                 break;
-            case BaseFile.TYPE_IMAGE:
+            case MultiFileSelectorActivity.TYPE_IMAGE:
                 Picasso.with(mContext)
                         .load(mFolders.get(position).getmFolderCover())
                         .placeholder(R.drawable.icon_list_large_image_no_shadow)
@@ -90,7 +91,7 @@ public class FolderAdapter extends BaseAdapter{
                         .centerCrop()
                         .into(folderViewHolder.sivIcon);
                 break;
-            case BaseFile.TYPE_VIDEO:
+            case MultiFileSelectorActivity.TYPE_VIDEO:
                 Picasso.with(mContext)
                         .load(mFolders.get(position).getmFolderCover())
                         .placeholder(R.drawable.icon_list_videofile)
