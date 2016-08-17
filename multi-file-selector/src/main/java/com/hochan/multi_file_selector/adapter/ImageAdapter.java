@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/5/14.
+ *
+ * Created by hochan on 2016/5/14.
  */
+@SuppressWarnings("ALL")
 public class ImageAdapter extends RecyclerView.Adapter{
 
     private ArrayList<BaseFile> mImageFiles = new ArrayList<>();
@@ -52,7 +54,6 @@ public class ImageAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
-        ImageFile imageFile = (ImageFile) mImageFiles.get(position);
 
         if(mSelectedImages.contains(mImageFiles.get(position))){
             imageViewHolder.sivMask.setVisibility(View.VISIBLE);
@@ -95,8 +96,6 @@ public class ImageAdapter extends RecyclerView.Adapter{
             }else {
                 mSelectedImages.add(mImageFiles.get(getPosition()));
                 sivMask.setVisibility(View.VISIBLE);
-
-                //sivMask.setImageTintList(ColorStateList.valueOf(mContext.getResources().getColor()));
             }
             System.out.println(mContext.getString(R.string.str_selected_count)+mSelectedImages.size());
             if(mAdapaterListener != null){

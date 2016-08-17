@@ -1,13 +1,6 @@
 package com.hochan.multi_file_selector.adapter;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
-import android.os.Build;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +15,6 @@ import com.hochan.multi_file_selector.data.BaseFile;
 import com.hochan.multi_file_selector.data.NoneMediaFile;
 import com.hochan.multi_file_selector.data.VideoFile;
 import com.hochan.multi_file_selector.listener.MediaFileAdapterListener;
-import com.hochan.multi_file_selector.tool.GetVideoThumbnail;
 import com.hochan.multi_file_selector.tool.ScreenTools;
 import com.hochan.multi_file_selector.tool.Tool;
 import com.hochan.multi_file_selector.view.SquaredImageView;
@@ -31,14 +23,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.support.v7.widget.RecyclerView.Adapter;
+import static android.support.v7.widget.RecyclerView.ViewHolder;
+
 /**
  *
- * Created by Administrator on 2016/5/19.
+ * Created by hochan on 2016/5/19.
  */
-public class LinearAdapter extends RecyclerView.Adapter{
-
-    final public static Uri SARTWORKURI = Uri
-            .parse("content://media/external/audio/albumart");
+public class LinearAdapter extends Adapter{
 
     private Context mContext;
     private List<BaseFile> mBaseFiles = new ArrayList<>();
@@ -60,13 +52,13 @@ public class LinearAdapter extends RecyclerView.Adapter{
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_linear_item, parent, false);
         return new LinearViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         final LinearViewHolder viewHolder = (LinearViewHolder) holder;
         if(mType == MultiFileSelectorActivity.TYPE_AUDIO) {
             AudioFile audioFile = (AudioFile) mBaseFiles.get(position);
@@ -129,7 +121,6 @@ public class LinearAdapter extends RecyclerView.Adapter{
             }else{
                 viewHolder.sivIcon.setImageResource(R.drawable.icon_list_videofile);
                 viewHolder.sivIcon.setTag(videoFile.getPath());
-                GetVideoThumbnail getVideoThumbnail = new GetVideoThumbnail(viewHolder.sivIcon, videoFile.getPath());
             }
         }
     }
@@ -139,7 +130,7 @@ public class LinearAdapter extends RecyclerView.Adapter{
         return mBaseFiles.size();
     }
 
-    class LinearViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class LinearViewHolder extends ViewHolder implements View.OnClickListener{
 
         public TextView tvName, tvDuration;
         public SquaredImageView sivIcon;

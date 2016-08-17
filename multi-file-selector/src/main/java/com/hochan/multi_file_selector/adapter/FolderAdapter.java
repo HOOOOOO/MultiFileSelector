@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.hochan.multi_file_selector.MultiFileSelectorActivity;
 import com.hochan.multi_file_selector.R;
-import com.hochan.multi_file_selector.data.BaseFile;
 import com.hochan.multi_file_selector.data.Folder;
 import com.hochan.multi_file_selector.tool.ScreenTools;
 import com.hochan.multi_file_selector.view.SquaredImageView;
@@ -19,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/5/17.
+ *
+ * Created by hochan on 2016/5/17.
  */
 public class FolderAdapter extends BaseAdapter{
 
@@ -54,7 +54,7 @@ public class FolderAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        FolderViewHolder folderViewHolder = null;
+        FolderViewHolder folderViewHolder;
         Folder folder = mFolders.get(position);
         if(convertView == null){
             folderViewHolder = new FolderViewHolder();

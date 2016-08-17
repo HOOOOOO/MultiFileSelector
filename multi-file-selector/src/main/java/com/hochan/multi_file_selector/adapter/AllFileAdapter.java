@@ -18,8 +18,9 @@ import java.util.List;
 
 /**
  *
- * Created by Administrator on 2016/5/21.
+ * Created by hochan on 2016/5/21.
  */
+@SuppressWarnings("ALL")
 public class AllFileAdapter extends RecyclerView.Adapter{
 
     private File[] mFiles = new File[]{new File("/storage/sdcard0"), new File("/storage/sdcard1")};

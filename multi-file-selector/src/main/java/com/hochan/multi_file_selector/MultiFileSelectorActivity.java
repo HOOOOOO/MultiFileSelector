@@ -28,9 +28,6 @@ public class MultiFileSelectorActivity extends AppCompatActivity {
 
     public final static ArrayList<String> TYPE_NAME = new ArrayList<>();
 
-    static {
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

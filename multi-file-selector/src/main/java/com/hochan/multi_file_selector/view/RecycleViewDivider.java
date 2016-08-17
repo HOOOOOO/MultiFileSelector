@@ -14,7 +14,8 @@ import android.view.View;
 import com.hochan.multi_file_selector.R;
 
 /**
- * Created by Administrator on 2016/5/14.
+ *
+ * Created by hochan on 2016/5/14.
  */
 public class RecycleViewDivider extends RecyclerView.ItemDecoration{
 

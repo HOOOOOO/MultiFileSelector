@@ -1,7 +1,8 @@
 package com.hochan.multi_file_selector.tool;
 
 /**
- * Created by Administrator on 2016/5/20.
+ *
+ * Created by hochan on 2016/5/20.
  */
 public class Tool {
 

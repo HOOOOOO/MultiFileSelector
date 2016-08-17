@@ -1,7 +1,8 @@
 package com.hochan.multi_file_selector.data;
 
 /**
- * Created by Administrator on 2016/5/19.
+ *
+ * Created by hochan on 2016/5/19.
  */
 public class ImageFile extends BaseFile {
 

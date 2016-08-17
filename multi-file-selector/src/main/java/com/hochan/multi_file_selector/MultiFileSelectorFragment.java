@@ -41,8 +41,7 @@ import java.util.List;
 
 /**
  *
- *
- * Created by Administrator on 2016/5/14.
+ * Created by hochan on 2016/5/14.
  */
 public class MultiFileSelectorFragment extends Fragment
         implements DataLoader.DataLoaderCallBack, MediaFileAdapterListener{
@@ -69,7 +68,6 @@ public class MultiFileSelectorFragment extends Fragment
     private int mCurrentFolder = 0;
     private int mSelectType;
 
-    //view
     private RecyclerView rclvMediaFiles;
     private Button btnOpera, btnArtists;
     private ListPopupWindow mFolderPopupWindow;

@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hochan.multi_file_selector.R;
@@ -18,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/5/20.
+ *
+ * Created by hochan on 2016/5/20.
  */
 public class VideoAdapter extends RecyclerView.Adapter{
 
@@ -29,8 +29,9 @@ public class VideoAdapter extends RecyclerView.Adapter{
 
     private MediaFileAdapterListener mAdapterListener;
 
-    public VideoAdapter(Context context){
+    public VideoAdapter(Context context, MediaFileAdapterListener adapterListener){
         this.mContext = context;
+	    mAdapterListener = adapterListener;
     }
 
     public void setData(List<BaseFile> baseFiles){
@@ -60,13 +61,11 @@ public class VideoAdapter extends RecyclerView.Adapter{
 
     class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private ImageView ivVideoCover;
-        private TextView tvVideoName, tvVideoDuration;
+	    private TextView tvVideoName, tvVideoDuration;
 
         public VideoViewHolder(View itemView) {
             super(itemView);
-            ivVideoCover = (ImageView) itemView.findViewById(R.id.iv_video_cover);
-            tvVideoName = (TextView) itemView.findViewById(R.id.tv_video_name);
+	        tvVideoName = (TextView) itemView.findViewById(R.id.tv_video_name);
             tvVideoDuration = (TextView) itemView.findViewById(R.id.tv_video_duration);
         }
 
@@ -81,15 +80,4 @@ public class VideoAdapter extends RecyclerView.Adapter{
         }
     }
 
-    public void setmAdapterListener(MediaFileAdapterListener mAdapterListener) {
-        this.mAdapterListener = mAdapterListener;
-    }
-
-    public MediaFileAdapterListener getmAdapterListener() {
-        return mAdapterListener;
-    }
-
-    public List<BaseFile> getmSelectedVideos() {
-        return mSelectedVideos;
-    }
 }

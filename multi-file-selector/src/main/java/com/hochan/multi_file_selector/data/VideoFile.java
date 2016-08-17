@@ -3,7 +3,8 @@ package com.hochan.multi_file_selector.data;
 import android.net.Uri;
 
 /**
- * Created by Administrator on 2016/5/19.
+ *
+ * Created by hochan on 2016/5/19.
  */
 public class VideoFile extends BaseFile {
 

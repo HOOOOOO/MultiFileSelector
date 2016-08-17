@@ -8,7 +8,8 @@ import com.hochan.multi_file_selector.MultiFileSelectorActivity;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/5/17.
+ *
+ * Created by hochan on 2016/5/17.
  */
 public class Folder {
 

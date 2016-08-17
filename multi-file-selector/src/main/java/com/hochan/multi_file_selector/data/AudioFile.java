@@ -4,7 +4,8 @@ import android.content.ContentUris;
 import android.net.Uri;
 
 /**
- * Created by Administrator on 2016/5/19.
+ *
+ * Created by hochan on 2016/5/19.
  */
 public class AudioFile extends BaseFile {
 
